@@ -1,7 +1,15 @@
 const http = require('http');
 
-const server = http.createServer((req, res) => res.end('Hello, world!'));
+const parseURL = require('./utils/parseURL');
 
-server.listen(3000, () => {
+const server = http.createServer((req, res) => {
+  const path = parseURL(req.url);
+
+  res.end('Hello, world!');
+
+  console.log('>> URL Path: ', path);
+});
+
+server.listen(3004, () => {
   console.log('>> Server is running at localhost:3000!');
 });
