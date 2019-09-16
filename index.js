@@ -1,13 +1,17 @@
 const http = require('http');
 
-const parseURL = require('./utils/parseURL');
+const getURLData = require('./utils/getURLData');
 
 const server = http.createServer((req, res) => {
-  const path = parseURL(req.url);
+  const { method, query, path } = getURLData(req);
 
   res.end('Hello, world!');
 
-  console.log('>> URL Path: ', path);
+  console.log('>> Path: ', path);
+
+  console.log('>> Query: ', query);
+
+  console.log('>> Method: ', method);
 });
 
 server.listen(3004, () => {
