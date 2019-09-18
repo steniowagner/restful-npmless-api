@@ -1,24 +1,32 @@
-const http = require('http');
+const { spawn } = require('child_process');
+const CONSTATNS = require('./src/utils/constants');
 
-const getRequestPayload = require('./utils/getRequestPayload');
-const getURLData = require('./utils/getURLData');
+const watcher = spawn('node', ['watcher.js']);
+let server = null;
 
-const server = http.createServer(async (req, res) => {
-  const { method, query, path } = getURLData(req);
+const initServer = () => {
+  server = spawn('node', ['./src/server.js']);
 
-  res.end('Hello, world!');
+  server.stdout.on('data', data => console.log(data.toString()));
 
-  console.log('>> Path: ', path);
+  server.stderr.on('data', data => console.log(data.toString()));
+};
 
-  console.log('>> Query: ', query);
+const killServer = () => {
+  server.stdin.pause();
+  server.kill(CONSTATNS.VALUES.KILL_PROCESS_FLAG);
+};
 
-  console.log('>> Method: ', method);
+const restartServer = () => {
+  killServer();
+  initServer();
+};
 
-  const payload = await getRequestPayload(req);
+initServer();
 
-  console.log('>> Payload: ', payload, typeof payload);
+watcher.stdout.on('data', (data) => {
+  console.log(data.toString());
+  restartServer();
 });
 
-server.listen(3004, () => {
-  console.log('>> Server is running at localhost:3000!');
-});
+watcher.on('close', () => killServer());

@@ -1,6 +1,6 @@
 const url = require('url');
 
-const getURLData = request => {
+const getRequestData = request => {
   const { method, url: urlPath } = request;
 
   const { pathname, query } = url.parse(urlPath, true);
@@ -14,4 +14,4 @@ const getURLData = request => {
   });
 };
 
-module.exports = getURLData;
+module.exports = getRequestData;
