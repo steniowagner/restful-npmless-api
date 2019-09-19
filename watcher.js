@@ -1,30 +1,61 @@
 const crypto = require('crypto');
+const path = require('path');
 const fs = require('fs');
 
-const fileWatched = './src/server.js';
+const DIR_WATCHED = 'src';
 
 let shouldFsWait = false;
 let previousHash = null;
 
-fs.watch(fileWatched, async (event, fileName) => {
+fs.watch(DIR_WATCHED, {
+  recursive: true,
+}, async (event, fileName) => {
   if (shouldFsWait) {
     return;
   }
 
+  shouldFsWait = setTimeout(() => {
+    shouldFsWait = false;
+  }, 500);
+
+  const filePath = `${__dirname}/${DIR_WATCHED}/${fileName}`;
+
   if (fileName && event === 'change') {
-    shouldFsWait = setTimeout(() => {
-      shouldFsWait = false;
-    }, 500);
+    try {
+      const fileContent = fs.readFileSync(filePath);
+      const currentHash = crypto.createHash('md5').update(fileContent).digest("hex");
 
-    const fileContent = fs.readFileSync(fileWatched);
-    const currentHash = crypto.createHash('md5').update(fileContent).digest("hex");
+      if (currentHash === previousHash) {
+        return;
+      }
 
-    if (currentHash === previousHash) {
-      return;
+      previousHash = currentHash;
+
+      console.log(`[watcher] - File ${fileName} has changed`);
+    } catch (err) {
+      console.error(err);
     }
+  }
 
-    previousHash = currentHash;
+  if (fileName && event === 'rename') {
+    try {
+      const isResourceExists = fs.existsSync(filePath);
+      const isDirectory = isResourceExists && fs.lstatSync(filePath).isDirectory();
+      const isFile = isResourceExists && fs.lstatSync(filePath).isFile();
 
-    console.log(`[watcher] - File ${fileName} has changed`);
+      let resourceType = '';
+
+      if (isDirectory) {
+        resourceType = 'Directory';
+      }
+
+      if (isFile) {
+        resourceType = 'File';
+      }
+
+      console.log(`[watcher] - The ${resourceType || 'resource'} ${fileName} was created/renamed/removed`);
+    } catch (err) {
+      console.error(err);
+    }
   }
 });

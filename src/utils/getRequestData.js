@@ -9,8 +9,8 @@ const getRequestData = request => {
 
   return ({
     method: method.toUpperCase(),
+    path: path || '/',
     query,
-    path,
   });
 };
 

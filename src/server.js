@@ -19,6 +19,4 @@ const server = http.createServer(async (req, res) => {
   console.log('>> Payload: ', payload, ' - ', typeof payload);
 });
 
-server.listen(3000, () => {
-  console.log('>> Server is running at localhost:3000!');
-});
+server.listen(3000, () => console.log('>> Server is running at localhost:3000!'));

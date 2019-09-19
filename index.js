@@ -29,4 +29,6 @@ watcher.stdout.on('data', (data) => {
   restartServer();
 });
 
+watcher.stderr.on('data', data => console.log(data.toString()));
+
 watcher.on('close', () => killServer());
