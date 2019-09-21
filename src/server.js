@@ -1,22 +1,20 @@
 const http = require('http');
 
-const getRequestPayload = require('./utils/getRequestPayload');
-const getRequestData = require('./utils/getRequestData');
+const Router = require('./router');
+
+const UserController = require('./controllers/UserController');
 
 const server = http.createServer(async (req, res) => {
-  const { method, query, path } = getRequestData(req);
+  res.setHeader('Content-Type', 'application/json');
 
-  res.end('Hello, world!!!');
+  const router = Router(req, res);
 
-  console.log('>> Path:', path);
+  router.get('/', UserController.read);
+  router.post('/', UserController.create);
 
-  console.log('>> Query: ', query);
+  router.process();
 
-  console.log('>> Method: ', method);
-
-  const payload = await getRequestPayload(req);
-
-  console.log('>> Payload: ', payload, ' - ', typeof payload);
+  res.end();
 });
 
 server.listen(3000, () => console.log('>> Server is running at localhost:3000!'));
