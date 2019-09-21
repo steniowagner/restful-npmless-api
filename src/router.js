@@ -1,8 +1,9 @@
+const getRequestParams = require('./utils/getRequestParams');
 const getRequestData = require('./utils/getRequestData');
 const { HTTP_METHODS } = require('./utils/constants');
 
 const router = (req, res) => {
-  const { method, path } = getRequestData(req);
+  // const { method, path } = getRequestData(req);
   const middlewares = [];
 
   const addMiddlewares = (method, route, ...pipeline) => {
@@ -17,6 +18,7 @@ const router = (req, res) => {
     }
 
     middlewares.push({
+      params: getRequestParams(req, route),
       pipeline,
       method,
       route,
@@ -26,14 +28,14 @@ const router = (req, res) => {
   const processPipeline = (...middlewares) => {
     const [currentMiddleware, ...next] = middlewares;
 
-    return currentMiddleware && currentMiddleware(req, res, () => processPipeline(...next));
+    return currentMiddleware ? currentMiddleware(req, res, () => processPipeline(...next)) : res.end();
   }
 
   const process = () => {
-    const { pipeline } = middlewares.find(processingMiddleware =>
+    /* const { pipeline } = middlewares.find(processingMiddleware =>
       processingMiddleware.method === method && processingMiddleware.route === path);
 
-    processPipeline(...pipeline);
+    processPipeline(...pipeline); */
   };
 
   const get = (route, ...pipeline) => addMiddlewares(HTTP_METHODS.GET, route, ...pipeline);

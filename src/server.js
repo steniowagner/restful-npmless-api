@@ -9,12 +9,10 @@ const server = http.createServer(async (req, res) => {
 
   const router = Router(req, res);
 
-  router.get('/', UserController.read);
-  router.post('/', UserController.create);
+  router.get('/users/#id', UserController.read);
+  router.post('/cart/#item/qwe/#kaka', UserController.create);
 
   router.process();
-
-  res.end();
 });
 
 server.listen(3000, () => console.log('>> Server is running at localhost:3000!'));

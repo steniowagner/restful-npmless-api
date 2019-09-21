@@ -1,0 +1,26 @@
+const getRequestData = require('./getRequestData');
+const { VALUES } = require('./constants');
+
+const getRequestParams = (req, route) => {
+  const { path } = getRequestData(req);
+
+  const [_, ...routeResources] = route.split('/');
+  const pathResources = path.split('/');
+
+  const params = routeResources.reduce((accumulator, current, index) => {
+    if (current.charAt(0) === VALUES.ROUTE_PARAM_FLAG) {
+      const field = current.substring(1);
+
+      return ({
+        ...accumulator,
+        [field]: pathResources[index],
+      });
+    }
+
+    return accumulator;
+  }, {});
+
+  return params;
+};
+
+module.exports = getRequestParams;
