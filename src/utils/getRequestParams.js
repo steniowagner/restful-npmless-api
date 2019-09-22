@@ -4,8 +4,8 @@ const { VALUES } = require('./constants');
 const getRequestParams = (req, route) => {
   const { path } = getRequestData(req);
 
+  const pathResources = path.split('/').filter(pathResource => !!pathResource);
   const [_, ...routeResources] = route.split('/');
-  const pathResources = path.split('/');
 
   const params = routeResources.reduce((accumulator, current, index) => {
     if (current.charAt(0) === VALUES.ROUTE_PARAM_FLAG) {

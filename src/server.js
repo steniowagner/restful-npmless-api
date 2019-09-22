@@ -10,7 +10,7 @@ const server = http.createServer(async (req, res) => {
   const router = Router(req, res);
 
   router.get('/users/#id', UserController.read);
-  router.post('/cart/#item/qwe/#kaka', UserController.create);
+  router.post('/cart/#item/qwe/#kaka', UserController.create, UserController.read);
 
   router.process();
 });

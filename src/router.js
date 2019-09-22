@@ -4,7 +4,7 @@ const getRequestData = require('./utils/getRequestData');
 const { HTTP_METHODS } = require('./utils/constants');
 
 const router = (req, res) => {
-  const { method, path } = getRequestData(req);
+  const { method, path, query } = getRequestData(req);
   const middlewares = [];
 
   const addMiddlewares = (method, route, ...pipeline) => {
@@ -41,6 +41,7 @@ const router = (req, res) => {
       // PIPE NOT FOUND MEANS ROUTE NOT FOUND!!!
 
     req.params = params;
+    req.query = query;
 
     processPipeline(...pipeline);
   };

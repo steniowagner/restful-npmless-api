@@ -1,8 +1,8 @@
 const { VALUES } = require('./constants');
 
 const checkIsSameRoute = (endpoint, URLPath) => {
+  const URLPathResources = URLPath.split('/').filter(URLPathResource => !!URLPathResource);
   const [_, ...endpointResources] = endpoint.split('/');
-  const URLPathResources = URLPath.split('/');
 
   if (endpointResources.length !== URLPathResources.length) {
     return false;
