@@ -1,8 +1,7 @@
 const http = require('http');
 
-const Router = require('./router');
-
 const UserController = require('./controllers/UserController');
+const Router = require('./router');
 
 const server = http.createServer(async (req, res) => {
   res.setHeader('Content-Type', 'application/json');

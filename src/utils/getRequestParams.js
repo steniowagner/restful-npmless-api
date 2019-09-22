@@ -1,8 +1,8 @@
-const getRequestData = require('./getRequestData');
+const parseRequest = require('./parseRequest');
 const { VALUES } = require('./constants');
 
 const getRequestParams = (req, route) => {
-  const { path } = getRequestData(req);
+  const { path } = parseRequest(req);
 
   const pathResources = path.split('/').filter(pathResource => !!pathResource);
   const [_, ...routeResources] = route.split('/');

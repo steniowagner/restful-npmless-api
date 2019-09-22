@@ -16,5 +16,6 @@ exports.read = (req, res, next) => {
   writeResponse(res, 200, {
     message: 'READ SUCCESSFULLY FROM UserController - READ'
   })
+  console.log(res);
   next();
 };

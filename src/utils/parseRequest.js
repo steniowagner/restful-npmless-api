@@ -17,7 +17,7 @@ const parseQueryParams = query => {
   return queryParams;
 };
 
-const getRequestData = request => {
+const parseRequest = request => {
   const { method, url: urlPath } = request;
   const { pathname, query } = url.parse(urlPath);
 
@@ -30,4 +30,4 @@ const getRequestData = request => {
   });
 };
 
-module.exports = getRequestData;
+module.exports = parseRequest;

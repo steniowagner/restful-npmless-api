@@ -1,5 +1,7 @@
 const checkIsSameRouteTest = require('./unit/utils/checkIsSameRoute.test');
-const getRequestDataTest = require('./unit/utils/getRequestData.test');
+const getRequestParams = require('./unit/utils/getRequestParams.test');
+const parseRequest = require('./unit/utils/parseRequest.test');
 
 checkIsSameRouteTest();
-getRequestDataTest();
+getRequestParams();
+parseRequest();

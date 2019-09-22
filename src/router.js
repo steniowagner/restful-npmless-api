@@ -1,10 +1,10 @@
 const getRequestParams = require('./utils/getRequestParams');
 const checkIsSameRoute = require('./utils/checkIsSameRoute');
-const getRequestData = require('./utils/getRequestData');
+const parseRequest = require('./utils/parseRequest');
 const { HTTP_METHODS } = require('./utils/constants');
 
 const router = (req, res) => {
-  const { method, path, query } = getRequestData(req);
+  const { method, path, query } = parseRequest(req);
   const middlewares = [];
 
   const addMiddlewares = (method, route, ...pipeline) => {
