@@ -1,7 +1,7 @@
-const writeResponse = require('../utils/writeResponse');
+const writeResponse = require('../utils/api/writeResponse');
+const write = require('../utils/io/write');
 
 exports.create = (req, res, next) => {
-  console.log(req.params)
   console.log('UserController - CREATE');
   next();
 
@@ -11,11 +11,20 @@ exports.create = (req, res, next) => {
 };
 
 exports.read = (req, res, next) => {
-  console.log(req.params)
-  console.log('UserController - READ');
+  write('123', 'users', {
+    name: 'stenio'
+  });
+
+  write('456', 'users', {
+    name: 'wagner'
+  });
+
+  write('456', 'items', {
+    name: 'wagner'
+  });
+
   writeResponse(res, 200, {
     message: 'READ SUCCESSFULLY FROM UserController - READ'
   })
-  console.log(res);
   next();
 };

@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const parseRequest = require('../../../src/utils/parseRequest');
+const parseRequest = require('../../../src/utils/api/parseRequest');
 const { HTTP_METHODS } = require('../../../src/utils/constants');
 
 let request = {};

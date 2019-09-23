@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const getRequestParams = require('../../../src/utils/getRequestParams');
+const getRequestParams = require('../../../src/utils/api/getRequestParams');
 
 let request = {};
 

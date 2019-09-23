@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const checkIsSameRoute = require('../../../src/utils/checkIsSameRoute');
+const checkIsSameRoute = require('../../../src/utils/api/checkIsSameRoute');
 
 const checkIsSameRoutetTest = () => {
   assert.deepStrictEqual(checkIsSameRoute('/user/#id/cart/#cart_id/item/#item_id', 'user/123//////cart////333//////item/5555'), true);

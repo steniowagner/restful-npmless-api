@@ -12,7 +12,7 @@ const onFinishPayloadStreaming = (resolve, reject, buffer) => {
   }
 };
 
-const getRequestPayload = request => {
+const parseRequestPayload = request => {
   let buffer = '';
 
   return new Promise((resolve, reject) => {
@@ -30,4 +30,4 @@ const getRequestPayload = request => {
   });
 };
 
-module.exports = getRequestPayload;
+module.exports = parseRequestPayload;

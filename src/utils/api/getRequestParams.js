@@ -1,5 +1,5 @@
 const parseRequest = require('./parseRequest');
-const { VALUES } = require('./constants');
+const { VALUES } = require('../constants');
 
 const getRequestParams = (req, route) => {
   const { path } = parseRequest(req);

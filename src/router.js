@@ -1,7 +1,8 @@
-const getRequestParams = require('./utils/getRequestParams');
-const checkIsSameRoute = require('./utils/checkIsSameRoute');
-const parseRequest = require('./utils/parseRequest');
+const getRequestParams = require('./utils/api/getRequestParams');
+const checkIsSameRoute = require('./utils/api/checkIsSameRoute');
+const writeResponse = require('./utils/api/writeResponse');
 const { HTTP_METHODS } = require('./utils/constants');
+const parseRequest = require('./utils/api/parseRequest');
 
 const router = (req, res) => {
   const { method, path, query } = parseRequest(req);
@@ -35,15 +36,22 @@ const router = (req, res) => {
   };
 
   const process = () => {
-    const { pipeline, params } = middlewares.find(processingMiddleware =>
-      processingMiddleware.method === method && checkIsSameRoute(processingMiddleware.route, path));
+    try {
+      const { pipeline, params } = middlewares.find(processingMiddleware =>
+        processingMiddleware.method === method && checkIsSameRoute(processingMiddleware.route, path));
 
-      // PIPE NOT FOUND MEANS ROUTE NOT FOUND!!!
+      req.params = params;
+      req.query = query;
+      req.locals = {};
 
-    req.params = params;
-    req.query = query;
+      processPipeline(...pipeline);
+    } catch (err) {
+      writeResponse(res, 404, {
+        message: 'Route not found.'
+      });
 
-    processPipeline(...pipeline);
+      res.end();
+    }
   };
 
   const get = (route, ...pipeline) => addMiddlewares(HTTP_METHODS.GET, route, ...pipeline);
