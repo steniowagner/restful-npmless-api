@@ -1,6 +1,6 @@
 const writeResponse = require('../utils/api/writeResponse');
+const read = require('../utils/io/read');
 const write = require('../utils/io/write');
-
 exports.create = (req, res, next) => {
   console.log('UserController - CREATE');
   next();
@@ -10,21 +10,24 @@ exports.create = (req, res, next) => {
   }) */
 };
 
-exports.read = (req, res, next) => {
-  write('123', 'users', {
+exports.read = async (req, res, next) => {
+  await write('123', 'users', {
     name: 'stenio'
   });
 
-  write('456', 'users', {
+  await write('456', 'users', {
     name: 'wagner'
   });
 
-  write('456', 'items', {
+  /* await write('456', 'items', {
     name: 'wagner'
-  });
+  }); */
 
+  const result = await read.all('items');
+  console.log(result);
   writeResponse(res, 200, {
     message: 'READ SUCCESSFULLY FROM UserController - READ'
   })
+
   next();
 };
