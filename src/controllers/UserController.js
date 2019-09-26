@@ -1,33 +1,30 @@
+const parseRequestPayload = require('../utils/api/parseRequestPayload');
 const writeResponse = require('../utils/api/writeResponse');
-const read = require('../utils/io/read');
-const write = require('../utils/io/write');
-exports.create = (req, res, next) => {
-  console.log('UserController - CREATE');
-  next();
+const { MODELS } = require('../utils/constants');
+const Model = require('../models/Model');
 
-  /* writeResponse(res, 404, {
-    message: 'NOT FOUND FROM UserController - CREATE'
-  }) */
+const User = Model(MODELS.USER);
+
+exports.create = async (req, res) => {
+  try {
+    const payload = await parseRequestPayload(req);
+
+    const id = await User.create(payload);
+
+    writeResponse(res, 201, {
+      id,
+    });
+  } catch (err) {
+    writeResponse(res, 500, {
+      message: 'READ SUCCESSFULLY FROM UserController - READ'
+    });
+  }
 };
 
-exports.read = async (req, res, next) => {
-  await write('123', 'users', {
-    name: 'stenio'
-  });
+exports.readAll = async (_, res) => {
+  const users = await User.findAll();
 
-  await write('456', 'users', {
-    name: 'wagner'
-  });
-
-  /* await write('456', 'items', {
-    name: 'wagner'
-  }); */
-
-  const result = await read.all('items');
-  console.log(result);
   writeResponse(res, 200, {
-    message: 'READ SUCCESSFULLY FROM UserController - READ'
-  })
-
-  next();
+    users,
+  });
 };

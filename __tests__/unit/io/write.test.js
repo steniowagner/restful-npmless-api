@@ -39,7 +39,7 @@ const testCreateResourcesWhenDoesntExists = async () => {
   console.log(`\t➡ should create the directory when it doesn't exists ${isDirectoryCreated ? '✅' : '❌'}`);
   assert.strictEqual(isDirectoryCreated, true);
 
-  console.log(`\t➡ should create the file .json file with the data when the directory doesn't exists ${isFileCreated ? '✅' : '❌'}\n`);
+  console.log(`\t➡ should create the file .json file with the data when the directory doesn't exists ${isFileCreated ? '✅' : '❌'}`);
   assert.strictEqual(isFileCreated, true);
 };
 
@@ -49,7 +49,7 @@ const testContainsExpectedData = async () => {
   const fileContent = await getFileContent(collection, id);
   const isExpectedData = JSON.stringify(fileContent) === JSON.stringify(data);
 
-  console.log(`\t➡ should create the .json file with the correct data ${isExpectedData ? '✅' : '❌'}\n`);
+  console.log(`\t➡ should create the .json file with the correct data ${isExpectedData ? '✅' : '❌'}`);
   assert.strictEqual(isExpectedData, true);
 };
 
@@ -73,15 +73,14 @@ const testShouldOverrideExistentData = async () => {
 const writeTest = async () => {
   console.log('\n------- # write.test.js # -------');
 
-  console.log('\n↳ it should create resources when they doesn\'t exists');
+  console.log('\n↳ Testing the method to write data into a .json file inside the data folder');
+
   await testCreateResourcesWhenDoesntExists();
   await afterEach();
 
-  console.log('\n↳ it should create the file with the correct content');
   await testContainsExpectedData();
   await afterEach();
 
-  console.log('\n↳ it should overrides the file with the new content');
   await testShouldOverrideExistentData();
   await afterEach();
 };

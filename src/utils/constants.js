@@ -17,12 +17,14 @@ const HTTP_METHODS = {
   PUT: 'PUT',
 };
 
-const ENTITIES = {
-  USER: 'USER',
+const MODELS = {
+  USER: {
+    collection: 'users',
+  },
 };
 
 module.exports = {
   HTTP_METHODS,
-  ENTITIES,
+  MODELS,
   VALUES,
 };

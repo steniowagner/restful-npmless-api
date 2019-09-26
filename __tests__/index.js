@@ -8,10 +8,10 @@ const writeTest = require('./unit/io/write.test');
 (async () => {
   console.log('\n🏁  Testing the API!');
   await readAllTest();
-  /* await writeTest();
+  await writeTest();
   await readSingleTest();
 
   checkIsSameRouteTest();
   getRequestParams();
-  parseRequest(); */
+  parseRequest();
 })();

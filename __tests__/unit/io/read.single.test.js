@@ -34,10 +34,9 @@ const testReadSingle = async () => {
 
   console.log('\n------- # read.single.test.js # -------');
 
-  console.log('\n↳ it should return the data correctly');
+  console.log('\n↳ Testing method to read data of a single file from data directory');
   await testReadingCorrectly();
 
-  console.log('\n↳ it should return null when the file doesn\'t exists');
   await removeDataDir();
   await testReturnNullWhenFileNotExists();
 

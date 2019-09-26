@@ -14,12 +14,10 @@ const server = http.createServer(async (req, res) => {
     writeResponse(res, 200, {
       message: 'UHUL! The API is Up && Running!!!',
     });
-
-    res.end();
   });
 
-  router.post('/users', UserController.create, UserController.read);
-  router.get('/users/#id', UserController.read);
+  router.post('/users', UserController.create);
+  router.get('/users', UserController.readAll);
 
   router.process();
 });

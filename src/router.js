@@ -49,8 +49,6 @@ const router = (req, res) => {
       writeResponse(res, 404, {
         message: 'Route not found.'
       });
-
-      res.end();
     }
   };
 

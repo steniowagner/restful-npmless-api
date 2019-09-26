@@ -31,7 +31,22 @@ exports.all = async collection => {
 
   const files = await asyncReadDir(dirPath);
 
-  return Promise.all(files.map(
+  if (!files.length) {
+    return [];
+  }
+
+  const items = await Promise.all(files.map(
     async file => this.single(collection, file.split('.json')[0]))
   );
+
+  const itemsWithId = items.map((item, index) => {
+    const id = files[index].split('.json')[0];
+
+    return ({
+      ...item,
+      id,
+    });
+  });
+
+  return itemsWithId;
 };

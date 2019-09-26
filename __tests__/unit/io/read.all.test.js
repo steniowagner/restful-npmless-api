@@ -23,21 +23,33 @@ const items = Array(10).fill(data).map((item, index) => ({
 }));
 
 const testReadingCorrectly = async () => {
+  await Promise.all(items.map(async item => write(item.username, collection, item)));
+
   const content = await read.all(collection);
+
   const isDataReadCorrectly = content.every((itemContent, index) =>
-    JSON.stringify(itemContent) === JSON.stringify(items[index]));
+    JSON.stringify({
+      username: itemContent.username,
+      name: itemContent.name,
+      age: itemContent.age,
+    }) === JSON.stringify(items[index]));
 
   console.log(`\t➡ should read the collection directory and return all it\'s data correctly ${isDataReadCorrectly ? '✅' : '❌'}`);
   assert.strictEqual(isDataReadCorrectly, true);
+
+  await removeDataDir();
 };
 
 const testReturnEmptyArrayCollectionFolderNotExists = async () => {
   const content = await read.all(collection);
 
-  const isReadCorrectly = Array.isArray(content) === true && !content.length;
+  const isArray = Array.isArray(content) === true;
+  console.log(`\t➡ should read an inexistent directory and return an array ${isArray ? '✅' : '❌'}`);
+  assert.strictEqual(Array.isArray(content), true);
 
-  console.log(`\t➡ should read an inexistent directory and return an empty array ${isReadCorrectly ? '✅' : '❌'}`);
-  assert.strictEqual(isReadCorrectly, true);
+  const isEmptyArray = content.length === 0;
+  console.log(`\t➡ should read an inexistent directory and return an empty array ${isEmptyArray ? '✅' : '❌'}`);
+  assert.strictEqual(isEmptyArray, true);
 };
 
 const testReturnEmptyArrayCollectionFolderIsEmpty = async () => {
@@ -48,21 +60,21 @@ const testReturnEmptyArrayCollectionFolderIsEmpty = async () => {
 
   const content = await read.all(collection);
 
-  const isReadCorrectly = Array.isArray(content) === true && !content.length;
+  const isArray = Array.isArray(content) === true;
+  console.log(`\t➡ should read an empty directory and return an array ${isArray ? '✅' : '❌'}`);
+  assert.strictEqual(isArray, true);
 
-  console.log(`\t➡ should read an empty directory and return an empty array ${isReadCorrectly ? '✅' : '❌'}`);
-  assert.strictEqual(isReadCorrectly, true);
+  const isEmptyArray = content.length === 0;
+  console.log(`\t➡ should read an empty directory and return an empty array ${isEmptyArray ? '✅' : '❌'}`);
+  assert.strictEqual(isEmptyArray, true);
 };
 
 const testReadAll = async () => {
   console.log('\n------- # read.all.test.js # -------');
 
-  await Promise.all(items.map(async item => write(item.username, collection, item)));
+  console.log('\n↳ Testing method to read all the data of all files from a directory');
 
-  console.log('\n↳ it should return the data correctly from the collection directory');
   await testReadingCorrectly();
-
-  await removeDataDir();
 
   await testReturnEmptyArrayCollectionFolderNotExists();
 
