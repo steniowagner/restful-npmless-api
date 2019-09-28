@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { VALUES }  = require('../../../src/utils/constants');
-const removeDataDir = require('./utils/removeDataDir');
+const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
 const read = require('../../../src/utils/io/read');
 

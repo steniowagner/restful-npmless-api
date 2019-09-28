@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const removeDataDir = require('./utils/removeDataDir');
+const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
 const read = require('../../../src/utils/io/read');
 

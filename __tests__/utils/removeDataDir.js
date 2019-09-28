@@ -2,7 +2,7 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 const fs = require('fs');
 
-const { VALUES } = require('../../../../src/utils/constants');
+const { VALUES } = require('../../src/utils/constants');
 
 const asyncExec = promisify(exec);
 

@@ -1,7 +1,13 @@
 const write = require('../utils/io/write');
 const read = require('../utils/io/read');
 
-const Model = ({ collection }) => {
+const Model = modelInfo => {
+  if (!modelInfo) {
+    throw new Error('You must provide a Model config');
+  }
+
+  const { collection } = modelInfo;
+
   if (!collection) {
     throw new Error('You must define a Collection for this Model');
   }
@@ -10,7 +16,7 @@ const Model = ({ collection }) => {
 
   const create = async data => {
     try {
-      const id = Date.now();
+      const id = String(Date.now());
 
       await write(id, collection, data);
 

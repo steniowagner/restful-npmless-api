@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { VALUES } = require('../../../src/utils/constants');
-const removeDataDir = require('./utils/removeDataDir');
+const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
 
 const asyncReadFile = promisify(fs.readFile);
@@ -20,8 +20,6 @@ const id = '123';
 
 const directoryPath = path.normalize(`${VALUES.DATA_PATH}/${collection}`);
 const filePath = path.normalize(`${directoryPath}/${id}.json`);
-
-const afterEach = async () => await removeDataDir();
 
 const getFileContent = async () => {
   const rawData = await asyncReadFile(filePath);
@@ -76,13 +74,13 @@ const writeTest = async () => {
   console.log('\n↳ Testing the method to write data into a .json file inside the data folder');
 
   await testCreateResourcesWhenDoesntExists();
-  await afterEach();
+  await removeDataDir();
 
   await testContainsExpectedData();
-  await afterEach();
+  await removeDataDir();
 
   await testShouldOverrideExistentData();
-  await afterEach();
+  await removeDataDir();
 };
 
 module.exports = writeTest;
