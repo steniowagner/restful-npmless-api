@@ -1,11 +1,11 @@
 const assert = require('assert');
 
 const { MODELS } = require('../../../src/utils/constants');
-const removeDataDir = require('../../utils/removeDataDir');
 const Model = require('../../../src/models/Model');
 
 const testFindAll = require('./Model.findAll.test');
 const testCreate = require('./Model.create.test');
+const testFindOne = require('./Model.findOne.test');
 
 const shouldThrowExceptionNoModelProvided = () => {
   try {
@@ -30,7 +30,8 @@ const shouldThrowExceptionNoCollectionProvided = () => {
 const shouldReturnMethodsCorrectlyWhenCreated = () => {
   const GenericModel = Model(MODELS.USER);
   const isReturningDataCorrectlyWhenCreated = typeof GenericModel.create === 'function'
-    && typeof GenericModel.findAll === 'function';
+    && typeof GenericModel.findAll === 'function'
+    && typeof GenericModel.findOne === 'function';
 
   console.log(`\t➡ should returns the methods correctly ${isReturningDataCorrectlyWhenCreated ? '✅' : '❌'}`);
   assert.strictEqual(isReturningDataCorrectlyWhenCreated, true);
@@ -46,6 +47,7 @@ const testModel = async () => {
 
   await testCreate();
   await testFindAll();
+  await testFindOne();
 };
 
 module.exports = testModel;

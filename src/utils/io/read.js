@@ -18,7 +18,10 @@ exports.single = async (collection, id) => {
   const rawData = await asyncReadFile(filePath);
   const fileContent = JSON.parse(rawData);
 
-  return fileContent;
+  return {
+    ...fileContent,
+    id,
+  };
 };
 
 exports.all = async collection => {

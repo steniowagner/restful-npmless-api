@@ -12,8 +12,6 @@ const Model = modelInfo => {
     throw new Error('You must define a Collection for this Model');
   }
 
-  const findAll = async () => read.all(collection);
-
   const create = async data => {
     try {
       const id = String(Date.now());
@@ -26,7 +24,12 @@ const Model = modelInfo => {
     }
   };
 
+  const findAll = async () => read.all(collection);
+
+  const findOne = async id => read.single(collection, id);
+
   return {
+    findOne,
     findAll,
     create,
   };
