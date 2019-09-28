@@ -51,6 +51,24 @@ const Model = modelInfo => {
 
   const findOne = async id => read.single(collection, id);
 
+  const findOneAndUpdate = async (id, fields) => {
+    _handleCheckIdValid(id);
+
+    const dirPath = path.normalize(`${VALUES.DATA_PATH}/${collection}/${id}.json`);
+    const isFileExists = await asyncExists(dirPath);
+
+    if (isFileExists) {
+      const item = await findOne(id);
+      const itemUpdated = Object.assign({}, item, fields);
+
+      await write(id, collection, itemUpdated);
+
+      return itemUpdated;
+    }
+
+    return null;
+  };
+
   const findOneAndRemove = async id => {
     _handleCheckIdValid(id);
 
@@ -69,6 +87,7 @@ const Model = modelInfo => {
   };
 
   return {
+    findOneAndUpdate,
     findOneAndRemove,
     findOne,
     findAll,

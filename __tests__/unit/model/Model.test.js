@@ -4,6 +4,7 @@ const { MODELS } = require('../../../src/utils/constants');
 const Model = require('../../../src/models/Model');
 
 const testFindOneAndRemove = require('./Mode.findOneAndRemove.test');
+const testFindOneAndUpdate = require('./Mode.findOneAndUpdate.test');
 const testFindAll = require('./Model.findAll.test');
 const testFindOne = require('./Model.findOne.test');
 const testCreate = require('./Model.create.test');
@@ -31,6 +32,8 @@ const shouldThrowExceptionNoCollectionProvided = () => {
 const shouldReturnMethodsCorrectlyWhenCreated = () => {
   const GenericModel = Model(MODELS.USER);
   const isReturningDataCorrectlyWhenCreated = typeof GenericModel.create === 'function'
+    && typeof GenericModel.findOneAndUpdate === 'function'
+    && typeof GenericModel.findOneAndRemove === 'function'
     && typeof GenericModel.findAll === 'function'
     && typeof GenericModel.findOne === 'function';
 
@@ -50,6 +53,7 @@ const testModel = async () => {
   await testFindAll();
   await testFindOne();
   await testFindOneAndRemove();
+  await testFindOneAndUpdate();
 };
 
 module.exports = testModel;
