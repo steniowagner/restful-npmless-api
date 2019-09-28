@@ -3,9 +3,10 @@ const assert = require('assert');
 const { MODELS } = require('../../../src/utils/constants');
 const Model = require('../../../src/models/Model');
 
+const testFindOneAndRemove = require('./Mode.findOneAndRemove.test');
 const testFindAll = require('./Model.findAll.test');
-const testCreate = require('./Model.create.test');
 const testFindOne = require('./Model.findOne.test');
+const testCreate = require('./Model.create.test');
 
 const shouldThrowExceptionNoModelProvided = () => {
   try {
@@ -48,6 +49,7 @@ const testModel = async () => {
   await testCreate();
   await testFindAll();
   await testFindOne();
+  await testFindOneAndRemove();
 };
 
 module.exports = testModel;
