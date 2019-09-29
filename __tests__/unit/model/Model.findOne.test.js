@@ -34,7 +34,10 @@ const shouldReturnJustOneItemById = async () => {
 
   console.log(`\t➡ should return the content of the file with id provided ${isCorrectUserData ? '✅' : '❌'}`);
 
-  assert.strictEqual(isCorrectUserData, true);
+  assert.deepStrictEqual({
+    ...data,
+    id: ID,
+  }, user);
 };
 
 const shouldReturnNullWhenCollectionDoesntExists = async () => {

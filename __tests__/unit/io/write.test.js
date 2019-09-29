@@ -48,7 +48,7 @@ const testContainsExpectedData = async () => {
   const isExpectedData = JSON.stringify(fileContent) === JSON.stringify(data);
 
   console.log(`\t➡ should create the .json file with the correct data ${isExpectedData ? '✅' : '❌'}`);
-  assert.strictEqual(isExpectedData, true);
+  assert.deepStrictEqual(fileContent, data);
 };
 
 const testShouldOverrideExistentData = async () => {
@@ -65,7 +65,7 @@ const testShouldOverrideExistentData = async () => {
   const isExpectedData = JSON.stringify(fileContent) === JSON.stringify(newData);
 
   console.log(`\t➡ should override existent data with the new one ${isExpectedData ? '✅' : '❌'}\n`);
-  assert.strictEqual(isExpectedData, true);
+  assert.deepStrictEqual(fileContent, newData);
 };
 
 const writeTest = async () => {

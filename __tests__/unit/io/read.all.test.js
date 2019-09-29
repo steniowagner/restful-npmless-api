@@ -35,7 +35,7 @@ const testReadingCorrectly = async () => {
     }) === JSON.stringify(items[index]));
 
   console.log(`\t➡ should read the collection directory and return all it\'s data correctly ${isDataReadCorrectly ? '✅' : '❌'}`);
-  assert.strictEqual(isDataReadCorrectly, true);
+  assert.deepStrictEqual(isDataReadCorrectly, true);
 
   await removeDataDir();
 };

@@ -15,13 +15,17 @@ const id = '123';
 
 const testReadingCorrectly = async () => {
   const content = await read.single(collection, id);
+
   const isDataReadCorrectly = JSON.stringify(content) === JSON.stringify({
     ...data,
     id,
   });
 
   console.log(`\t➡ should read the file and return it\'s content correctly ${isDataReadCorrectly ? '✅' : '❌'}`);
-  assert.strictEqual(isDataReadCorrectly, true);
+  assert.deepStrictEqual({
+    ...data,
+    id,
+  }, content);
 };
 
 const testReturnNullWhenFileNotExists = async () => {
