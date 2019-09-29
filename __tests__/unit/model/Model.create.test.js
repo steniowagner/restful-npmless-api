@@ -46,6 +46,7 @@ const testCreate = async () => {
   console.log('\n↳ Testing the create method');
 
   await shouldCreateDataCorrectly();
+
   await shouldReturnIdWhenCreate();
 
   await removeDataDir();

@@ -49,7 +49,11 @@ const Model = modelInfo => {
 
   const findAll = async () => read.all(collection);
 
-  const findOne = async id => read.single(collection, id);
+  const findOne = async id => {
+    _handleCheckIdValid(id);
+
+    return read.single(collection, id);
+  };
 
   const findOneAndUpdate = async (id, fields) => {
     _handleCheckIdValid(id);
@@ -59,6 +63,11 @@ const Model = modelInfo => {
 
     if (isFileExists) {
       const item = await findOne(id);
+
+      if (!Object.keys(fields).length) {
+        return item;
+      }
+
       const itemUpdated = Object.assign({}, item, fields);
 
       await write(id, collection, itemUpdated);

@@ -102,10 +102,15 @@ const testFindOneAndRemove = async () => {
   console.log('\n↳ Testing the findOneAndRemove method');
 
   await shouldRemoveItemCorrectly();
+
   await shouldReturnRemovedItemWhenRemovedCorrectly();
+
   await shouldReturnNullWhenItemDoesntExists();
+
   await shouldThrowExceptionWhenIdNotProvided();
+
   await shouldThrowExceptionWhenIdNotString();
+
   await shouldThrowExceptionWhenDifferentLength();
 
   await removeDataDir();

@@ -87,9 +87,13 @@ const testFindOneAndUpdate = async () => {
   console.log('\n↳ Testing the findOneAndUpdate method');
 
   await shouldUpdateItemCorrectly();
+
   await shouldReturnNullWhenItemDoesntExists();
+
   await shouldThrowExceptionWhenIdNotProvided();
+
   await shouldThrowExceptionWhenIdNotString();
+
   await shouldThrowExceptionWhenDifferentLength();
 
   await removeDataDir();

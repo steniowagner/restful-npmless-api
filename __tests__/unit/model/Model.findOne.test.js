@@ -1,5 +1,6 @@
 const assert = require('assert');
 
+const { EXPECTION_MESSAGES } = require('../../../src/utils/constants');
 const { USER } = require('../../../src/models/types');
 const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
@@ -14,7 +15,7 @@ const data = {
   age: 25,
 };
 
-const ID = '123';
+const ID = '1234567890123';
 
 const _checkResultIsNull = (item, textConditionDescription) => {
   const isNull = typeof item === 'object' && item === null;
@@ -56,6 +57,44 @@ const shouldReturnNullWhenCollectionIsEmpty = async () => {
   assert.strictEqual(isNull, true);
 };
 
+
+const shouldThrowExceptionWhenIdNotProvided = async () => {
+  try {
+    await User.findOne();
+  } catch (err) {
+    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_NOT_PROVIDED;
+
+    console.log(`\t➡ should throw an exception when id isn't provided ${isCorrectException ? '✅' : '❌'}`);
+
+    assert.deepStrictEqual(isCorrectException, true);
+  }
+};
+
+const shouldThrowExceptionWhenIdNotString = async () => {
+  try {
+    await User.findOne(1234567890123);
+  } catch (err) {
+    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_TYPE_STRING;
+
+    console.log(`\t➡ should throw an exception when id isn't a string ${isCorrectException ? '✅' : '❌'}`);
+
+    assert.deepStrictEqual(isCorrectException, true);
+  }
+};
+
+const shouldThrowExceptionWhenDifferentLength = async () => {
+  try {
+    await User.findOne('123');
+  } catch (err) {
+    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_INVALID_PATTERN;
+
+    console.log(`\t➡ should throw an exception when id aren't following the default pattern of 13 characters ${isCorrectException ? '✅' : '❌'}`);
+
+    assert.deepStrictEqual(isCorrectException, true);
+  }
+};
+
+
 const testFindOne = async () => {
   console.log('\n↳ Testing the findOne method');
 
@@ -70,6 +109,12 @@ const testFindOne = async () => {
   await removeDataDir();
 
   await shouldReturnNullWhenCollectionDoesntExists();
+
+  await shouldThrowExceptionWhenIdNotProvided();
+
+  await shouldThrowExceptionWhenIdNotString();
+
+  await shouldThrowExceptionWhenDifferentLength();
 };
 
 module.exports = testFindOne;
