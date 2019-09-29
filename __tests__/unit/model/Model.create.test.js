@@ -3,7 +3,8 @@ const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 
-const { MODELS, VALUES } = require('../../../src/utils/constants');
+const { VALUES } = require('../../../src/utils/constants');
+const { USER } = require('../../../src/models/types');
 const removeDataDir = require('../../utils/removeDataDir');
 const Model = require('../../../src/models/Model');
 
@@ -15,7 +16,7 @@ const data = {
   age: 25,
 };
 
-const User = Model(MODELS.USER);
+const User = Model(USER);
 
 const shouldReturnIdWhenCreate = async () => {
   const id = await User.create(data);
@@ -32,7 +33,7 @@ const shouldReturnIdWhenCreate = async () => {
 const shouldCreateDataCorrectly = async () => {
   const id = await User.create(data);
 
-  const filePath = path.normalize(`${VALUES.DATA_PATH}/${MODELS.USER.collection}/${id}.json`);
+  const filePath = path.normalize(`${VALUES.DATA_PATH}/${USER.collection}/${id}.json`);
 
   const rawData = await asyncReadFile(filePath);
   const fileContent = JSON.parse(rawData);

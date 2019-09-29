@@ -1,12 +1,12 @@
 const assert = require('assert');
 
-const { MODELS } = require('../../../src/utils/constants');
+const { USER } = require('../../../src/models/types');
 const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
 const Model = require('../../../src/models/Model');
 const clearDir = require('../../utils/clearDir');
 
-const User = Model(MODELS.USER);
+const User = Model(USER);
 
 const data = {
   username: 'steniowagner',
@@ -74,7 +74,7 @@ const shouldReturnEmptyArrayWhenCollectionDoesntExists = async () => {
 const testFindAll = async () => {
   console.log('\n↳ Testing the findAll method');
 
-  await Promise.all(items.map(async item => write(item.username, MODELS.USER.collection, item)));
+  await Promise.all(items.map(async item => write(item.username, USER.collection, item)));
 
   await shouldReturnAnArray();
 
@@ -82,7 +82,7 @@ const testFindAll = async () => {
 
   await shoudlFindAllDataCorrectly();
 
-  await clearDir(MODELS.USER.collection);
+  await clearDir(USER.collection);
 
   await shouldReturnEmptyArrayWhenCollectionIsEmpty();
 

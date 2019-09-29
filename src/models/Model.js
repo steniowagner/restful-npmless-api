@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 
-const { VALUES } = require('../../src/utils/constants');
+const { EXPECTION_MESSAGES, VALUES } = require('../utils/constants');
 
 const write = require('../utils/io/write');
 const read = require('../utils/io/read');
@@ -23,15 +23,15 @@ const Model = modelInfo => {
 
   const _handleCheckIdValid = id => {
     if (!id) {
-      throw new Error('The field \'id\' is required');
+      throw new Error(EXPECTION_MESSAGES.ID_NOT_PROVIDED);
     }
 
     if (typeof id !== 'string') {
-      throw new Error('The type of the field \'id\' should be string');
+      throw new Error(EXPECTION_MESSAGES.ID_TYPE_STRING);
     }
 
     if (id.length !== 13) {
-      throw new Error('The received \'id\' is invalid');
+      throw new Error(EXPECTION_MESSAGES.ID_INVALID_PATTERN);
     }
   };
 

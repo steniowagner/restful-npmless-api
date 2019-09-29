@@ -1,12 +1,12 @@
 const assert = require('assert');
 
-const { MODELS } = require('../../../src/utils/constants');
+const { USER } = require('../../../src/models/types');
 const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
 const Model = require('../../../src/models/Model');
 const clearDir = require('../../utils/clearDir');
 
-const User = Model(MODELS.USER);
+const User = Model(USER);
 
 const data = {
   username: 'steniowagner',
@@ -56,11 +56,11 @@ const shouldReturnNullWhenCollectionIsEmpty = async () => {
 const testFindOne = async () => {
   console.log('\n↳ Testing the findOne method');
 
-  await write(ID, MODELS.USER.collection, data);
+  await write(ID, USER.collection, data);
 
   await shouldReturnJustOneItemById();
 
-  await clearDir(MODELS.USER.collection);
+  await clearDir(USER.collection);
 
   await shouldReturnNullWhenCollectionIsEmpty();
 

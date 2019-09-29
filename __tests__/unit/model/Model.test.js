@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { MODELS } = require('../../../src/utils/constants');
+const { USER } = require('../../../src/models/types');
 const Model = require('../../../src/models/Model');
 
 const testFindOneAndRemove = require('./Mode.findOneAndRemove.test');
@@ -30,7 +30,7 @@ const shouldThrowExceptionNoCollectionProvided = () => {
 };
 
 const shouldReturnMethodsCorrectlyWhenCreated = () => {
-  const GenericModel = Model(MODELS.USER);
+  const GenericModel = Model(USER);
   const isReturningDataCorrectlyWhenCreated = typeof GenericModel.create === 'function'
     && typeof GenericModel.findOneAndUpdate === 'function'
     && typeof GenericModel.findOneAndRemove === 'function'

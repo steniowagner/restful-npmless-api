@@ -1,9 +1,9 @@
 const parseRequestPayload = require('../utils/api/parseRequestPayload');
 const writeResponse = require('../utils/api/writeResponse');
-const { MODELS } = require('../utils/constants');
+const { USER } = require('../models/types');
 const Model = require('../models/Model');
 
-const User = Model(MODELS.USER);
+const User = Model(USER);
 
 exports.create = async (req, res) => {
   try {

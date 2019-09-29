@@ -1,10 +1,10 @@
 const assert = require('assert');
 
-const { MODELS } = require('../../../src/utils/constants');
+const { USER } = require('../../../src/models/types');
 const removeDataDir = require('../../utils/removeDataDir');
 const Model = require('../../../src/models/Model');
 
-const User = Model(MODELS.USER);
+const User = Model(USER);
 
 const data = {
   username: 'steniowagner',

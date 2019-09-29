@@ -3,14 +3,15 @@ const assert = require('assert');
 const path = require('path');
 const fs = require('fs');
 
-const { MODELS, VALUES } = require('../../../src/utils/constants');
+const { VALUES, EXPECTION_MESSAGES } = require('../../../src/utils/constants');
 const removeDataDir = require('../../utils/removeDataDir');
+const { USER } = require('../../../src/models/types');
 const Model = require('../../../src/models/Model');
 const clearDir = require('../../utils/clearDir');
 
-const User = Model(MODELS.USER);
+const User = Model(USER);
 
-const collectionPath = path.normalize(`${VALUES.DATA_PATH}/${MODELS.USER.collection}`);
+const collectionPath = path.normalize(`${VALUES.DATA_PATH}/${USER.collection}`);
 const asyncExists = promisify(fs.exists);
 
 const data = {
@@ -30,7 +31,7 @@ const shouldRemoveItemCorrectly = async () => {
 
   assert.strictEqual(!isItemExists, true);
 
-  await clearDir(MODELS.USER.collection);
+  await clearDir(USER.collection);
 };
 
 const shouldReturnRemovedItemWhenRemovedCorrectly = async () => {
@@ -50,7 +51,7 @@ const shouldReturnRemovedItemWhenRemovedCorrectly = async () => {
     id,
   });
 
-  await clearDir(MODELS.USER.collection);
+  await clearDir(USER.collection);
 };
 
 const shouldReturnNullWhenItemDoesntExists = async () => {
@@ -65,7 +66,7 @@ const shouldThrowExceptionWhenIdNotProvided = async () => {
   try {
     await User.findOneAndRemove();
   } catch (err) {
-    const isCorrectException = err.message === 'The field \'id\' is required';
+    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_NOT_PROVIDED;
 
     console.log(`\t➡ should throw an exception when id isn't provided ${isCorrectException ? '✅' : '❌'}`);
 
@@ -77,7 +78,7 @@ const shouldThrowExceptionWhenIdNotString = async () => {
   try {
     await User.findOneAndRemove(1234567890123);
   } catch (err) {
-    const isCorrectException = err.message === 'The type of the field \'id\' should be string';
+    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_TYPE_STRING;
 
     console.log(`\t➡ should throw an exception when id isn't a string ${isCorrectException ? '✅' : '❌'}`);
 
@@ -89,7 +90,7 @@ const shouldThrowExceptionWhenDifferentLength = async () => {
   try {
     await User.findOneAndRemove('123');
   } catch (err) {
-    const isCorrectException = err.message === 'The received \'id\' is invalid';
+    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_INVALID_PATTERN;
 
     console.log(`\t➡ should throw an exception when id aren't following the default pattern of 13 characters ${isCorrectException ? '✅' : '❌'}`);
 
