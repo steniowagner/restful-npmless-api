@@ -27,13 +27,25 @@ const handleValidateRequiredField = ({ schema, data, field, path }) => {
   }
  };
 
-const handleFieldIsObject = ({ schema, data, field, path }) => {
+const handleFieldIsObject = ({ data, field, path }) => {
   if (!data[field]) {
     throwValidationError(`The field '${path}' is required`);
   }
 
   if (typeof data[field] !== 'object') {
     throwValidationError(`The field '${path}' must be an object`);
+  }
+};
+
+const handleEnumType = ({ schema, data, field, path }) => {
+  if (!data[field]) {
+    return;
+  }
+
+  const isDataIncludedEnum = schema[field].enum.includes(data[field]);
+
+  if (!isDataIncludedEnum) {
+    throwValidationError(`The field '${path}' must be one of: [${schema[field].enum}]`);
   }
 };
 
@@ -50,12 +62,18 @@ const validateSchema = (schema, data) => {
       pathLog = [];
     }
 
+    const path = [...pathLog, `${field}`].join('.');
+
     if (schema[field] && schema[field].required) {
-      handleValidateRequiredField({ ...params, path: [...pathLog, `${field}`].join('.') });
+      handleValidateRequiredField({ ...params, path });
     }
 
     if (schema[field] && !schema[field].required) {
-      handleValidateNonRequiredField({ ...params, path: [...pathLog, `${field}`].join('.') });
+      handleValidateNonRequiredField({ ...params, path });
+    }
+
+    if (schema[field] && schema[field].enum) {
+      handleEnumType({ ...params, path });
     }
   }
 

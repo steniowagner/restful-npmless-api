@@ -1,43 +1,48 @@
 const assert = require('assert');
 
 const validateSchema = require('../../../src/models/utils/validateSchema');
-const DataTypes = require('../../../src/models/schemas/dataTypes');
+const { STRING, NUMBER } = require('../../../src/models/schemas/dataTypes');
 
 const schema = {
   username: {
-    type: DataTypes.STRING,
+    type: STRING,
     required: true,
   },
   name: {
-    type: DataTypes.STRING,
+    type: STRING,
+  },
+  sex: {
+    enum: ['M', 'F'],
+    type: STRING,
   },
   address: {
     country: {
-      type: DataTypes.STRING,
+      type: STRING,
       required: true,
     },
     state: {
-      type: DataTypes.STRING,
+      type: STRING,
     },
     city: {
-      type: DataTypes.STRING,
+      type: STRING,
     },
     latLng: {
       lat: {
-        type: DataTypes.NUMBER,
+        type: NUMBER,
         required: true,
       },
       lng: {
-        type: DataTypes.NUMBER,
+        type: NUMBER,
       },
     }
   }
 };
 
-const validateSchemaCorrectly = () => {
+const shouldValidateSchemaCorrectly = () => {
   const data = {
     username: 'steniowagner',
     name: 'Stenio Wagner',
+    sex: 'M',
     address: {
       country: 'Brazil',
       state: 'Ceará',
@@ -228,12 +233,66 @@ const shouldThrowErrorWhenMissedObject = () => {
   }
 };
 
+const shouldValidateSchemaWithEnumCorrectly = () => {
+  const schemaWithEnum = {
+    ...schema,
+    sex: {
+      type: STRING,
+      enum: ['M', 'F'],
+    },
+  };
+
+  const data = {
+    username: 'steniowagner',
+    name: 'Stenio Wagner',
+    sex: 'M',
+    address: {
+      country: 'Brazil',
+      state: 'Ceará',
+      city: 'Fortaleza',
+      latLng: {
+        lat: 123321,
+        lng: -321123,
+      }
+    },
+  };
+
+  const isValidSchema = validateSchema(schemaWithEnum, data);
+  console.log(`\t➡ should validate and return true when the data follows the schema (with enum)${isValidSchema ? '✅' : '❌'}`);
+  assert.strictEqual(isValidSchema, true);
+};
+
+const shouldTrowErrorWhenEnumHasWrongType = () => {
+  try {
+    const data = {
+      username: 'steniowagner',
+      name: 'Stenio Wagner',
+      sex: 'other',
+      address: {
+        country: 'Brazil',
+        state: 'Ceará',
+        city: 'Fortaleza',
+        latLng: {
+          lat: 123321,
+          lng: -321123,
+        }
+      },
+    };
+
+    validateSchema(schema, data);
+  } catch (err) {
+    const isCorrectException = err.message === "The field 'sex' must be one of: [M,F]";
+    console.log(`\t➡ should throw an exception when the schema define an enum and the data has a different type ${isCorrectException ? '✅' : '❌'}`);
+    assert.strictEqual(isCorrectException, true);
+  }
+};
+
 const testValidateSchema = () => {
   console.log('\n------- # validateSchema.test.js # -------');
 
   console.log('\n↳ Testing the validateSchema method');
 
-  validateSchemaCorrectly();
+  shouldValidateSchemaCorrectly();
 
   shouldThrowErrorWhenRequiredFieldIsMissed();
   shouldThrowErrorWhenRequiredFieldHasWrongType();
@@ -245,6 +304,9 @@ const testValidateSchema = () => {
 
   shouldThrowErrorWhenShouldHaveObject();
   shouldThrowErrorWhenMissedObject();
+
+  shouldTrowErrorWhenEnumHasWrongType();
+  shouldValidateSchemaWithEnumCorrectly();
 };
 
 module.exports = testValidateSchema;
