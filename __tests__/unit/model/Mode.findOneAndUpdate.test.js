@@ -1,7 +1,8 @@
 const assert = require('assert');
 
-const { USER } = require('../../../src/models/types');
+const { VALUES } = require('../../../src/utils/constants');
 const removeDataDir = require('../../utils/removeDataDir');
+const { USER } = require('../../../src/models/types');
 const Model = require('../../../src/models/Model');
 
 const User = Model(USER);
@@ -77,7 +78,7 @@ const shouldThrowExceptionWhenDifferentLength = async () => {
   } catch (err) {
     const isCorrectException = err.message === 'The received \'id\' is invalid';
 
-    console.log(`\t➡ should throw an exception when id aren't following the default pattern of 13 characters ${isCorrectException ? '✅' : '❌'}`);
+    console.log(`\t➡ should throw an exception when id aren't following the default pattern of ${VALUES.ID_LENGHT} characters ${isCorrectException ? '✅' : '❌'}`);
 
     assert.deepStrictEqual(isCorrectException, true);
   }

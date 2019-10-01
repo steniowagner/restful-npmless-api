@@ -1,9 +1,9 @@
-const EXPECTION_MESSAGES = require('./exceptionMessages');
+const EXCEPTION_MESSAGES = require('./exceptionMessages');
 const HTTP_METHODS = require('./httpMethods');
 const VALUES = require('./values');
 
 module.exports = {
-  EXPECTION_MESSAGES,
+  EXCEPTION_MESSAGES,
   HTTP_METHODS,
   VALUES,
 };

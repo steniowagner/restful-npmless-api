@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const { EXPECTION_MESSAGES } = require('../../../src/utils/constants');
+const { VALUES, EXCEPTION_MESSAGES } = require('../../../src/utils/constants');
 const { USER } = require('../../../src/models/types');
 const removeDataDir = require('../../utils/removeDataDir');
 const write = require('../../../src/utils/io/write');
@@ -62,7 +62,7 @@ const shouldThrowExceptionWhenIdNotProvided = async () => {
   try {
     await User.findOne();
   } catch (err) {
-    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_NOT_PROVIDED;
+    const isCorrectException = err.message === EXCEPTION_MESSAGES.ID_NOT_PROVIDED;
 
     console.log(`\t➡ should throw an exception when id isn't provided ${isCorrectException ? '✅' : '❌'}`);
 
@@ -74,7 +74,7 @@ const shouldThrowExceptionWhenIdNotString = async () => {
   try {
     await User.findOne(1234567890123);
   } catch (err) {
-    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_TYPE_STRING;
+    const isCorrectException = err.message === EXCEPTION_MESSAGES.ID_TYPE_STRING;
 
     console.log(`\t➡ should throw an exception when id isn't a string ${isCorrectException ? '✅' : '❌'}`);
 
@@ -86,9 +86,9 @@ const shouldThrowExceptionWhenDifferentLength = async () => {
   try {
     await User.findOne('123');
   } catch (err) {
-    const isCorrectException = err.message === EXPECTION_MESSAGES.ID_INVALID_PATTERN;
+    const isCorrectException = err.message === EXCEPTION_MESSAGES.ID_INVALID_PATTERN;
 
-    console.log(`\t➡ should throw an exception when id aren't following the default pattern of 13 characters ${isCorrectException ? '✅' : '❌'}`);
+    console.log(`\t➡ should throw an exception when id aren't following the default pattern of ${VALUES.ID_LENGHT} characters ${isCorrectException ? '✅' : '❌'}`);
 
     assert.deepStrictEqual(isCorrectException, true);
   }

@@ -2,8 +2,9 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 
-const { EXPECTION_MESSAGES, VALUES } = require('../utils/constants');
+const { EXCEPTION_MESSAGES, VALUES } = require('../utils/constants');
 
+const validateSchema = require('./utils/validateSchema');
 const write = require('../utils/io/write');
 const read = require('../utils/io/read');
 
@@ -12,31 +13,37 @@ const asyncExists = promisify(fs.exists);
 
 const Model = modelInfo => {
   if (!modelInfo) {
-    throw new Error('You must provide a Model config');
+    throw new Error(EXCEPTION_MESSAGES.MODEL_CONFIG_MISSED);
   }
 
-  const { collection } = modelInfo;
+  const { collection, schema } = modelInfo;
 
   if (!collection) {
-    throw new Error('You must define a Collection for this Model');
+    throw new Error(EXCEPTION_MESSAGES.MODEL_MISSED_COLLECTION);
+  }
+
+  if (!schema) {
+    throw new Error(EXCEPTION_MESSAGES.MODEL_MISSED_SCHEMA);
   }
 
   const _handleCheckIdValid = id => {
     if (!id) {
-      throw new Error(EXPECTION_MESSAGES.ID_NOT_PROVIDED);
+      throw new Error(EXCEPTION_MESSAGES.ID_NOT_PROVIDED);
     }
 
     if (typeof id !== 'string') {
-      throw new Error(EXPECTION_MESSAGES.ID_TYPE_STRING);
+      throw new Error(EXCEPTION_MESSAGES.ID_TYPE_STRING);
     }
 
-    if (id.length !== 13) {
-      throw new Error(EXPECTION_MESSAGES.ID_INVALID_PATTERN);
+    if (id.length !== VALUES.ID_LENGHT) {
+      throw new Error(EXCEPTION_MESSAGES.ID_INVALID_PATTERN);
     }
   };
 
   const create = async data => {
     try {
+      validateSchema(schema, data);
+
       const id = String(Date.now());
 
       await write(id, collection, data);

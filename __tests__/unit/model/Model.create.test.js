@@ -11,9 +11,9 @@ const Model = require('../../../src/models/Model');
 const asyncReadFile = promisify(fs.readFile);
 
 const data = {
-  usernamme: 'steniowagner',
+  username: 'steniowagner',
   name: 'Stenio',
-  age: 25,
+  email: 'stenio.wagner1@gmail.com',
 };
 
 const User = Model(USER);
@@ -21,8 +21,8 @@ const User = Model(USER);
 const shouldReturnIdWhenCreate = async () => {
   const id = await User.create(data);
 
-  const isIdCorrectFormat = id.split('').length === 13;
-  console.log(`\t➡ should returns an id with 13 characters ${isIdCorrectFormat ? '✅' : '❌'}`);
+  const isIdCorrectFormat = id.split('').length === VALUES.ID_LENGHT;
+  console.log(`\t➡ should returns an id with ${VALUES.ID_LENGHT} characters ${isIdCorrectFormat ? '✅' : '❌'}`);
   assert.strictEqual(isIdCorrectFormat, true);
 
   const isIdCorrectType = typeof id === 'string';
