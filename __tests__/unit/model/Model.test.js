@@ -56,19 +56,18 @@ const testModel = async () => {
   console.log('\n------- # Model.test.js # -------');
 
   console.log('\n↳ Testing the Model creation');
+  testValidateSchema();
 
-  shouldThrowExceptionNoModelProvided();
+  /*shouldThrowExceptionNoModelProvided();
   shouldThrowExceptionNoCollectionProvided();
   shouldThrowExceptionNoSchemaProvided();
   shouldReturnMethodsCorrectlyWhenCreated();
-
-  testValidateSchema();
 
   await testCreate();
   await testFindAll();
   await testFindOne();
   await testFindOneAndRemove();
-  await testFindOneAndUpdate();
+  await testFindOneAndUpdate();*/
 };
 
 module.exports = testModel;
