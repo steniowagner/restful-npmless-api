@@ -1,7 +1,7 @@
 const assert = require('assert');
 
-const validateSchema = require('../../../src/models/utils/validateSchema');
-const { STRING, NUMBER } = require('../../../src/models/schemas/dataTypes');
+const validateSchema = require('../../../../src/models/utils/validateSchema');
+const { STRING, NUMBER } = require('../../../../src/models/schemas/dataTypes');
 
 const schema = {
   username: {

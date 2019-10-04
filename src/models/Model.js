@@ -4,7 +4,9 @@ const fs = require('fs');
 
 const { EXCEPTION_MESSAGES, VALUES } = require('../utils/constants');
 
+const filterItemsWithQueryParams = require('./utils/filterItemsWithQueryParams');
 const validateSchema = require('./utils/validateSchema');
+const paginateItems = require('./utils/paginateItems');
 const write = require('../utils/io/write');
 const read = require('../utils/io/read');
 
@@ -54,7 +56,24 @@ const Model = modelInfo => {
     }
   };
 
-  const findAll = async () => read.all(collection);
+  const findAll = async (queryParams = {}) => {
+    const items = await read.all(collection);
+    const queryParamsKeys = Object.keys(queryParams);
+
+    if (!queryParamsKeys.length) {
+      return items;
+    }
+
+    const filteredItems = filterItemsWithQueryParams(items, schema, queryParams);
+
+    const isPaginationSet = queryParamsKeys.includes('limit') && queryParamsKeys.includes('page');
+
+    if (isPaginationSet) {
+      return paginateItems(filteredItems, queryParams);
+    }
+
+    return filteredItems;
+  };
 
   const findOne = async id => {
     _handleCheckIdValid(id);

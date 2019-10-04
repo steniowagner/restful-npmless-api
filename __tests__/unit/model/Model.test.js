@@ -1,11 +1,14 @@
 const assert = require('assert');
 
-const { USER } = require('../../../src/models/types');
 const { EXCEPTION_MESSAGES } = require('../../../src/utils/constants');
+const { USER } = require('../../../src/models/types');
 const Model = require('../../../src/models/Model');
+
+const testFilterItemsWithQueryParams = require('./utils/filterItemsWithQueryParams.test');
 const testFindOneAndRemove = require('./Mode.findOneAndRemove.test');
 const testFindOneAndUpdate = require('./Mode.findOneAndUpdate.test');
-const testValidateSchema = require('./validateSchema.test');
+const testValidateSchema = require('./utils/validateSchema.test');
+const testPaginateItems = require('./utils/paginateItems.test');
 const testFindAll = require('./Model.findAll.test');
 const testFindOne = require('./Model.findOne.test');
 const testCreate = require('./Model.create.test');
@@ -56,18 +59,22 @@ const testModel = async () => {
   console.log('\n------- # Model.test.js # -------');
 
   console.log('\n↳ Testing the Model creation');
-  testValidateSchema();
 
-  /*shouldThrowExceptionNoModelProvided();
+  shouldThrowExceptionNoModelProvided();
   shouldThrowExceptionNoCollectionProvided();
   shouldThrowExceptionNoSchemaProvided();
   shouldReturnMethodsCorrectlyWhenCreated();
+
+  testValidateSchema();
 
   await testCreate();
   await testFindAll();
   await testFindOne();
   await testFindOneAndRemove();
-  await testFindOneAndUpdate();*/
+  await testFindOneAndUpdate();
+
+  testFilterItemsWithQueryParams();
+  testPaginateItems();
 };
 
 module.exports = testModel;

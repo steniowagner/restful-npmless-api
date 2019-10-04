@@ -21,8 +21,10 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.readAll = async (_, res) => {
-  const users = await User.findAll();
+exports.readAll = async (req, res) => {
+  const queryParams = req.query;
+
+  const users = await User.findAll(queryParams);
 
   writeResponse(res, 200, {
     users,
