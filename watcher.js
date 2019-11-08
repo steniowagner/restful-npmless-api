@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-const DIR_WATCHED = 'server';
+const DIR_WATCHED = 'src';
 
 let shouldFsWait = false;
 let previousHash = null;

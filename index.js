@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 
-const KILL_PROCESS_FLAG = 'SIGKILL',
+const KILL_PROCESS_FLAG = 'SIGKILL';
 
 const watcher = spawn('node', ['watcher.js']);
 let server = null;

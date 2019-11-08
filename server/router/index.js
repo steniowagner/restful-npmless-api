@@ -2,12 +2,33 @@ const { EXCEPTION_MESSAGES, HTTP_METHODS } = require('./constants');
 const parseRequestPayload = require('./utils/parseRequestPayload');
 const getRequestParams = require('./utils/getRequestParams');
 const checkIsSameRoute = require('./utils/checkIsSameRoute');
-const writeResponse = require('./utils/writeResponse');
 const parseRequest = require('./utils/parseRequest');
 
 const router = (req, res) => {
   const { method, path, query } = parseRequest(req);
   const middlewares = [];
+
+  res.send = () => ({
+    status: statusCode => ({
+        content: bodyResponse => {
+          let responseContent = bodyResponse;
+
+          if (responseContent && typeof responseContent !== 'object') {
+            responseContent = {
+              [responseContent]: responseContent,
+            }
+          }
+
+          res.writeHead(statusCode || 200);
+
+          if (responseContent) {
+            res.write(JSON.stringify(responseContent));
+          }
+
+          res.end();
+        }
+    }),
+  });
 
   const addMiddlewares = (method, route, ...pipeline) => {
     const isValidPipeline = pipeline.every(pipe => typeof pipe === 'function');
@@ -50,7 +71,7 @@ const router = (req, res) => {
 
       processPipeline(...pipeline);
     } catch (err) {
-      writeResponse(res, 404, {
+      res.send().status(400).content({
         message: 'Route not found.'
       });
     }
