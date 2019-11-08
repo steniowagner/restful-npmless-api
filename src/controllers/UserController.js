@@ -1,22 +1,16 @@
-const parseRequestPayload = require('../utils/api/parseRequestPayload');
-const writeResponse = require('../utils/api/writeResponse');
-const { USER } = require('../models/types');
-const Model = require('../models/Model');
-
-const User = Model(USER);
+const writeResponse = require('../../server/router/utils/writeResponse');
+const User = require('../models/User');
 
 exports.create = async (req, res) => {
   try {
-    const payload = await parseRequestPayload(req);
-
-    const id = await User.create(payload);
+    const id = await User.create(req.payload);
 
     writeResponse(res, 201, {
       id,
     });
   } catch (err) {
     writeResponse(res, 500, {
-      message: 'READ SUCCESSFULLY FROM UserController - READ'
+      error: err.message
     });
   }
 };

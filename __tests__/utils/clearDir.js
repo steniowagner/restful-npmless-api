@@ -2,7 +2,7 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 
-const { VALUES } = require('../../src/utils/constants');
+const { VALUES } = require('../../server/model/constants');
 
 const asyncReadDir = promisify(fs.readdir);
 const asyncUnlink = promisify(fs.unlink);

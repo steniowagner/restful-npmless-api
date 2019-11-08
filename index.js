@@ -1,5 +1,6 @@
 const { spawn } = require('child_process');
-const CONSTATNS = require('./src/utils/constants');
+
+const KILL_PROCESS_FLAG = 'SIGKILL',
 
 const watcher = spawn('node', ['watcher.js']);
 let server = null;
@@ -14,7 +15,7 @@ const initServer = () => {
 
 const killServer = () => {
   server.stdin.pause();
-  server.kill(CONSTATNS.VALUES.KILL_PROCESS_FLAG);
+  server.kill(KILL_PROCESS_FLAG);
 };
 
 const restartServer = () => {

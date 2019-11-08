@@ -1,10 +1,10 @@
 const config = {
   development: {
-    port: 3000,
+    dataDir: 'database',
   },
 
   test: {
-    port: 3000,
+    dataDir: 'database-test',
   },
 };
 
