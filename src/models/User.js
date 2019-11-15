@@ -1,21 +1,21 @@
 const { Model, dataTypes } = require('../../server/model');
+const { STRING } = dataTypes;
 
 const UserSchema = {
   collection: 'users',
   schema: {
     username: {
-      type: dataTypes.STRING,
+      type: STRING,
       required: true,
-      unique: true,
     },
     name: {
-      type: dataTypes.STRING,
+      type: STRING,
       required: true,
     },
     email: {
-      type: dataTypes.STRING,
-      required: true,
+      type: STRING,
       unique: true,
+      required: true,
     },
   }
 };

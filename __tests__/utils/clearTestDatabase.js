@@ -7,7 +7,7 @@ const { VALUES } = require('../../server/model/constants');
 const asyncReadDir = promisify(fs.readdir);
 const asyncUnlink = promisify(fs.unlink);
 
-const clearDir = async dir => {
+const clearTestDatabase = async dir => {
   try {
     const dirPath = path.normalize(`${VALUES.DATA_PATH}/${dir}`);
     const files = await asyncReadDir(dirPath);
@@ -18,4 +18,4 @@ const clearDir = async dir => {
   }
 };
 
-module.exports = clearDir;
+module.exports = clearTestDatabase;

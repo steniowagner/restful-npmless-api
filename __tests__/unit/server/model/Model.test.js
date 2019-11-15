@@ -4,6 +4,7 @@ const { EXCEPTION_MESSAGES } = require('../../../../server/model/constants');
 const { Model } = require('../../../../server/model');
 
 const testFilterItemsWithQueryParams = require('./utils/filterItemsWithQueryParams.test');
+const testCheckUniqueFields = require('./utils/checkUniqueFields.test');
 const testFindOneAndRemove = require('./Model.findOneAndRemove.test');
 const testFindOneAndUpdate = require('./Model.findOneAndUpdate.test');
 const testValidateSchema = require('./utils/validateSchema.test');
@@ -60,14 +61,15 @@ const testModel = async () => {
 
   console.log('\n↳ Testing the Model creation');
 
-  shouldThrowExceptionNoModelProvided();
+  /* shouldThrowExceptionNoModelProvided();
   shouldThrowExceptionNoCollectionProvided();
   shouldThrowExceptionNoSchemaProvided();
   shouldReturnMethodsCorrectlyWhenCreated();
 
-  testValidateSchema();
+  testValidateSchema(); */
+  await testCheckUniqueFields();
 
-  await testCreate();
+  /*await testCreate();
   await testFindAll();
   await testFindOne();
   await testFindOneAndRemove();
@@ -76,7 +78,7 @@ const testModel = async () => {
   testFilterItemsWithQueryParams();
   testPaginateItems();
 
-  await removeDataDir();
+  await removeDataDir(); */
 };
 
 module.exports = testModel;

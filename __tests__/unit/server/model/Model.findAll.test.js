@@ -1,9 +1,9 @@
 const assert = require('assert');
 
 const { GenericModel, GenericSchema, genericData } = require('./GenericModel');
+const clearTestDatabase = require('../../../utils/clearTestDatabase');
 const removeDataDir = require('../../../utils/removeDataDir');
 const { write } = require('../../../../server/model/io');
-const clearDir = require('../../../utils/clearDir');
 
 const NUM_ITEMS = 10;
 
@@ -73,7 +73,7 @@ const testFindAll = async () => {
 
   await shoudlFindAllDataCorrectly();
 
-  await clearDir(GenericSchema.collection);
+  await clearTestDatabase(GenericSchema.collection);
 
   await shouldReturnEmptyArrayWhenCollectionIsEmpty();
 

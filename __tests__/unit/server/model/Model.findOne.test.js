@@ -2,9 +2,9 @@ const assert = require('assert');
 
 const { VALUES, EXCEPTION_MESSAGES } = require('../../../../server/model/constants');
 const { GenericModel, GenericSchema, genericData } = require('./GenericModel');
+const clearTestDatabase = require('../../../utils/clearTestDatabase');
 const removeDataDir = require('../../../utils/removeDataDir');
 const { write } = require('../../../../server/model/io');
-const clearDir = require('../../../utils/clearDir');
 
 const ID = '1234567890123';
 
@@ -91,9 +91,9 @@ const testFindOne = async () => {
 
   await write(ID, GenericSchema.collection, genericData);
 
+  await clearTestDatabase(GenericSchema.collection);
   await shouldReturnJustOneItemById();
 
-  await clearDir(GenericSchema.collection);
 
   await shouldReturnNullWhenCollectionIsEmpty();
 

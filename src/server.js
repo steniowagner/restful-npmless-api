@@ -9,15 +9,11 @@ const server = http.createServer(async (req, res) => {
 
   const router = Router(req, res);
 
-  router.get('/', () => {
-    res.writeHead(200);
-
-    res.write(JSON.stringify({
-      message: 'UHUL! The API is Up && Running!!!',
-    }));
-
-    res.end();
-  });
+  router.get('/', (_, res) =>
+    res.send().status(200).data({
+      message: 'UHUL! The API is Up && Running!!!'
+    })
+  );
 
   router.post('/users', UserController.create);
   router.get('/users', UserController.readAll);

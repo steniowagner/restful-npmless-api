@@ -4,8 +4,8 @@ const path = require('path');
 const fs = require('fs');
 
 const { VALUES, EXCEPTION_MESSAGES } = require('../../../../server/model/constants');
+const clearTestDatabase = require('../../../utils/clearTestDatabase');
 const removeDataDir = require('../../../utils/removeDataDir');
-const clearDir = require('../../../utils/clearDir');
 
 const { GenericModel, GenericSchema, genericData } = require('./GenericModel');
 
@@ -23,7 +23,7 @@ const shouldRemoveItemCorrectly = async () => {
 
   assert.strictEqual(!isItemExists, true);
 
-  await clearDir(GenericSchema.collection);
+  await clearTestDatabase(GenericSchema.collection);
 };
 
 const shouldReturnRemovedItemWhenRemovedCorrectly = async () => {
@@ -43,7 +43,7 @@ const shouldReturnRemovedItemWhenRemovedCorrectly = async () => {
     id,
   });
 
-  await clearDir(GenericSchema.collection);
+  await clearTestDatabase(GenericSchema.collection);
 };
 
 const shouldReturnNullWhenItemDoesntExists = async () => {

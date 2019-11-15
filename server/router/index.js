@@ -10,12 +10,12 @@ const router = (req, res) => {
 
   res.send = () => ({
     status: statusCode => ({
-        content: bodyResponse => {
+        data: bodyResponse => {
           let responseContent = bodyResponse;
 
           if (responseContent && typeof responseContent !== 'object') {
             responseContent = {
-              [responseContent]: responseContent,
+              data: responseContent,
             }
           }
 
@@ -71,7 +71,7 @@ const router = (req, res) => {
 
       processPipeline(...pipeline);
     } catch (err) {
-      res.send().status(400).content({
+      res.send().status(404).data({
         message: 'Route not found.'
       });
     }

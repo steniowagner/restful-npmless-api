@@ -6,6 +6,7 @@ const EXCEPTION_MESSAGES = {
   MODEL_CONFIG_MISSED: 'You must provide a Model config',
   ID_INVALID_PATTERN: 'The received \'id\' is invalid',
   ID_NOT_PROVIDED: 'The field \'id\' is required',
+  UNIQUE_FIELD_ERROR: 'The value of the following path is unique and already exists in another record',
 };
 
 module.exports = EXCEPTION_MESSAGES;

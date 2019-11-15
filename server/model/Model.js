@@ -5,6 +5,7 @@ const fs = require('fs');
 const { EXCEPTION_MESSAGES, VALUES } = require('./constants');
 
 const filterItemsWithQueryParams = require('./utils/filterItemsWithQueryParams');
+const checkUniqueFields = require('./utils/checkUniqueFields');
 const validateSchema = require('./utils/validateSchema');
 const paginateItems = require('./utils/paginateItems');
 const write = require('./io/write');
@@ -49,6 +50,8 @@ const Model = modelInfo => {
   const create = async data => {
     try {
       validateSchema(schema, data);
+
+      await checkUniqueFields(modelInfo, data);
 
       const id = String(Date.now());
 
@@ -99,6 +102,10 @@ const Model = modelInfo => {
       }
 
       const itemUpdated = Object.assign({}, item, fields);
+
+      validateSchema(schema, itemUpdated);
+
+      await checkUniqueFields(modelInfo, itemUpdated);
 
       await write(id, collection, itemUpdated);
 
