@@ -42,7 +42,6 @@ const schemaWithArray = {
   ...schema,
   contacts: [
     {
-      required: true,
       type: {
         required: true,
         type: STRING,
@@ -64,7 +63,6 @@ const schemaWithNestedArray = {
   ...schema,
   arr: [
     {
-      required: true,
       nestedArr: [{
         required: true,
         field: {
@@ -577,7 +575,9 @@ const shouldThrowErrorWhenNonRequiredArrayHasPrimitiveTypesProvideWrongType = ()
     };
 
     const schemaWithNestedArray = {
-      arr: [STRING],
+      arr: [{
+        type: STRING
+      }],
     };
 
     validateSchema(schemaWithNestedArray, data);

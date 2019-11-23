@@ -61,24 +61,25 @@ const testModel = async () => {
 
   console.log('\n↳ Testing the Model creation');
 
-  /* shouldThrowExceptionNoModelProvided();
+  shouldThrowExceptionNoModelProvided();
   shouldThrowExceptionNoCollectionProvided();
   shouldThrowExceptionNoSchemaProvided();
   shouldReturnMethodsCorrectlyWhenCreated();
 
-  testValidateSchema(); */
-  await testCheckUniqueFields();
+  testValidateSchema();
 
-  /*await testCreate();
+  await testCreate();
   await testFindAll();
   await testFindOne();
   await testFindOneAndRemove();
   await testFindOneAndUpdate();
 
+  await testCheckUniqueFields();
+
   testFilterItemsWithQueryParams();
   testPaginateItems();
 
-  await removeDataDir(); */
+  await removeDataDir();
 };
 
 module.exports = testModel;

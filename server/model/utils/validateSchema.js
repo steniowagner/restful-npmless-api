@@ -1,3 +1,5 @@
+const dataTypes = require('../dataTypes');
+
 let pathLog = [];
 
 const throwValidationError = message => {
@@ -76,19 +78,20 @@ const handleFieldIsArray = ({ schema, data, field, path }) => {
     throwValidationError(`The field '${path}' must be an array`);
   }
 
-  const arrayType = typeof schema[field][0]
+  const hasJustTypeField = schema[field][0].type && Object.keys(schema[field][0]).length === 1;
+  const arrayType = typeof schema[field][0].type;
+  const isArrayPrimitiveType = arrayType === dataTypes.STRING
+    || arrayType === dataTypes.NUMBER || arrayType === dataTypes.BOOLEAN;
 
-  if (arrayType !== 'object') {
+  if (hasJustTypeField && isArrayPrimitiveType) {
     const isDataCorrectType = data[field].every(item => typeof item === arrayType);
 
     if (!isDataCorrectType) {
       throwValidationError(`All elements of '${path}' must be ${arrayType}`);
     }
+
+    return;
   }
-
-  const innerSchema = Object.assign({}, schema[field][0]);
-
-  delete innerSchema.required;
 
   if (!data[field]) {
     throwValidationError(`The field '${path}' is required`);
@@ -97,6 +100,8 @@ const handleFieldIsArray = ({ schema, data, field, path }) => {
   if (!data[field].length) {
     throwValidationError(`The field '${path}' can't be empty`);
   }
+
+  const innerSchema = Object.assign({}, schema[field][0]);
 
   for (let i = 0; i < data[field].length; i++) {
     validateSchema(innerSchema, data[field][i]);

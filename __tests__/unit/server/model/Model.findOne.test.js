@@ -91,9 +91,9 @@ const testFindOne = async () => {
 
   await write(ID, GenericSchema.collection, genericData);
 
-  await clearTestDatabase(GenericSchema.collection);
   await shouldReturnJustOneItemById();
 
+  await clearTestDatabase(GenericSchema.collection);
 
   await shouldReturnNullWhenCollectionIsEmpty();
 

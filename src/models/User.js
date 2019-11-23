@@ -1,23 +1,23 @@
 const { Model, dataTypes } = require('../../server/model');
-const { STRING } = dataTypes;
+const { NUMBER, STRING } = dataTypes;
 
 const UserSchema = {
   collection: 'users',
   schema: {
-    username: {
-      type: STRING,
-      required: true,
-    },
-    name: {
-      type: STRING,
-      required: true,
-    },
-    email: {
-      type: STRING,
-      unique: true,
-      required: true,
-    },
+    arr: [{
+      child: [{
+        type: STRING
+      }]
+    }],
+
   }
 };
 
 module.exports = Model(UserSchema);
+
+/*
+
+  arr de tipos nativos => tem o type
+  arr de tipo composto => não tem o type
+
+*/
