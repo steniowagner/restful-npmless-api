@@ -15,6 +15,7 @@ const server = http.createServer(async (req, res) => {
     })
   );
 
+  router.put('/users/#id', UserController.update);
   router.post('/users', UserController.create);
   router.get('/users', UserController.readAll);
 

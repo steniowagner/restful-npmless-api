@@ -4,6 +4,10 @@ const { EXCEPTION_MESSAGES } = require('../constants');
 const decoder = new StringDecoder('utf-8');
 
 const onFinishPayloadStreaming = (resolve, reject, buffer) => {
+  if (!buffer) {
+    return {};
+  }
+
   try {
     const payload = JSON.parse(buffer);
 

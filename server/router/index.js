@@ -72,7 +72,7 @@ const router = (req, res) => {
       processPipeline(...pipeline);
     } catch (err) {
       res.send().status(404).data({
-        message: 'Route not found.'
+        message: EXCEPTION_MESSAGES.ROUTE_NOT_FOUND,
       });
     }
   };

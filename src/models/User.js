@@ -4,20 +4,18 @@ const { NUMBER, STRING } = dataTypes;
 const UserSchema = {
   collection: 'users',
   schema: {
-    arr: [{
-      child: [{
-        type: STRING
-      }]
-    }],
-
+    name: {
+      type: STRING,
+      required: true,
+    },
+    age: {
+      type: NUMBER
+    },
+    email: {
+      type: STRING,
+      required: true,
+    }
   }
 };
 
 module.exports = Model(UserSchema);
-
-/*
-
-  arr de tipos nativos => tem o type
-  arr de tipo composto => não tem o type
-
-*/
