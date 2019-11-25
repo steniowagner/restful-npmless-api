@@ -1,6 +1,8 @@
 const http = require('http');
 
 const UserController = require('./controllers/UserController');
+const AuthController = require('./controllers/AuthController');
+
 const env = require('./config/environments');
 const Router = require('../server/router');
 
@@ -16,8 +18,11 @@ const server = http.createServer(async (req, res) => {
   );
 
   router.put('/users/#id', UserController.update);
-  router.post('/users', UserController.create);
-  router.get('/users', UserController.readAll);
+
+  router.get('/users', AuthController.authorize, UserController.readAll);
+
+  router.post('/signup', UserController.create);
+  router.get('/login', AuthController.authenticate);
 
   await router.process();
 });
