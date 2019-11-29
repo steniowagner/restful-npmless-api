@@ -1,4 +1,5 @@
-const dataTypes = require('../dataTypes');
+const { STRING, BOOLEAN, NUMBER, ID } = require('../dataTypes');
+const checkIdValid = require('./checkIdValid');
 
 let pathLog = [];
 
@@ -34,7 +35,17 @@ const handleValidateFieldTypeArray = ({ schema, data, field, path }) => {
     throwValidationError(`The field '${path}' must be an array of type '${schema[field].type[0]}'`);
   }
 
-  const isAllItemsRequiredType = data[field].every(item => typeof item === schema[field].type[0]);
+  const isAllItemsRequiredType = data[field].every(item => {
+    if (schema[field].type[0] === ID) {
+      try {
+        return checkIdValid(item);
+      } catch (err) {
+        throwValidationError(`All items of '${path}' must be of type ID`);
+      }
+    }
+
+    return typeof item === schema[field].type[0];
+  });
 
   if (!isAllItemsRequiredType) {
     throwValidationError(`All items of '${path}' must be of type ${schema[field].type}`);
@@ -46,7 +57,17 @@ const handleValidateRequiredField = ({ schema, data, field, path }) => {
     throwValidationError(`The field '${path}' is required`);
   }
 
-  if (typeof data[field] !== schema[field].type) {
+  const isFieldTypeId = schema[field].type === ID;
+
+  if (isFieldTypeId) {
+    try {
+      checkIdValid(data[field]);
+    } catch (err) {
+      throwValidationError(`The field '${path}' must be of type ID`);
+    }
+  }
+
+  if (!isFieldTypeId && typeof data[field] !== schema[field].type) {
     throwValidationError(`The field '${path}' must be of type ${schema[field].type}`);
   }
  };
@@ -73,38 +94,52 @@ const handleFieldIsObject = ({ data, field, path }) => {
   }
 };
 
+const handleValidationArrayPrimitiveType = (arrayType, data, path) => {
+  const isDataCorrectType = data.every(item => typeof item === arrayType);
+
+  if (!isDataCorrectType) {
+    throwValidationError(`All elements of '${path}' must be ${arrayType}`);
+  }
+};
+
+const handleValidationArrayIdType = (ids, path) => {
+  try {
+    ids.every(id => checkIdValid(id));
+  } catch (err) {
+    throwValidationError(`All elements of '${path}' must be of type ID`);
+  }
+};
+
 const handleFieldIsArray = ({ schema, data, field, path }) => {
+  if (!data[field] && !schema[field][0].required) {
+    return;
+  }
+
+  if (!data[field] && schema[field][0].required) {
+    throwValidationError(`The field '${path}' is required`);
+  }
+
   if (data[field] && !Array.isArray(data[field])) {
     throwValidationError(`The field '${path}' must be an array`);
   }
 
-  const hasJustTypeField = schema[field][0].type && Object.keys(schema[field][0]).length === 1;
   const arrayType = typeof schema[field][0].type;
-  const isArrayPrimitiveType = arrayType === dataTypes.STRING
-    || arrayType === dataTypes.NUMBER || arrayType === dataTypes.BOOLEAN;
+  const isTypeId = schema[field][0].type === ID;
+  const isArrayPrimitiveType = !isTypeId && [STRING, BOOLEAN, NUMBER]
+    .some(type => type === arrayType);
 
-  if (hasJustTypeField && isArrayPrimitiveType) {
-    const isDataCorrectType = data[field].every(item => typeof item === arrayType);
-
-    if (!isDataCorrectType) {
-      throwValidationError(`All elements of '${path}' must be ${arrayType}`);
-    }
-
+  if (schema[field][0].type && isArrayPrimitiveType) {
+    handleValidationArrayPrimitiveType(arrayType, data[field], path);
     return;
   }
 
-  if (!data[field]) {
-    throwValidationError(`The field '${path}' is required`);
+  if (schema[field][0].type && isTypeId) {
+    handleValidationArrayIdType(data[field], path);
+    return;
   }
-
-  if (!data[field].length) {
-    throwValidationError(`The field '${path}' can't be empty`);
-  }
-
-  const innerSchema = Object.assign({}, schema[field][0]);
 
   for (let i = 0; i < data[field].length; i++) {
-    validateSchema(innerSchema, data[field][i]);
+    validateSchema(schema[field][0], data[field][i]);
   }
 };
 

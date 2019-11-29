@@ -436,32 +436,6 @@ const shouldThrowErrorWhenRequiredNestedArrayFieldHasWrongType = () => {
   }
 };
 
-const shouldThrowErrorWhenRequiredArrayIsEmpty = () => {
-  try {
-    const data = {
-      username: 'steniowagner',
-      name: 'Stenio Wagner',
-      sex: 'M',
-      address: {
-        country: 'Brazil',
-        state: 'Ceará',
-        city: 'Fortaleza',
-        latLng: {
-          lat: 123321,
-          lng: -321123,
-        }
-      },
-      arr: [],
-    };
-
-    validateSchema(schemaWithNestedArray, data);
-  } catch (err) {
-    const isCorrectException = err.message === "The field 'arr' can't be empty";
-    console.log(`\t➡ should throw an exception when a required array is empty ${isCorrectException ? '✅' : '❌'}`);
-    assert.strictEqual(isCorrectException, true);
-  }
-};
-
 const shouldThrowErrorWhenRequiredNestedArrayFieldIsMissed = () => {
   try {
     const data = {
@@ -739,7 +713,6 @@ const testValidateSchema = () => {
   shouldThrowErrorWhenRequiredNestedArrayFieldHasWrongType();
   shouldThrowErrorWhenRequiredNestedArrayFieldIsMissed();
   shouldThrowErrorWhenRequiredNestedArrayHasWrongType();
-  shouldThrowErrorWhenRequiredArrayIsEmpty();
   shouldThrowErrorWhenNonRequiredArrayHasWrongType();
   shouldThrowErrorWhenNonRequiredNestedArrayHasWrongType();
   shouldThrowErrorWhenNonRequiredArrayHasPrimitiveTypesProvideWrongType();

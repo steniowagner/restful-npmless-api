@@ -2,14 +2,15 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 
-const { EXCEPTION_MESSAGES, VALUES } = require('./constants');
-
 const filterItemsWithQueryParams = require('./utils/filterItemsWithQueryParams');
 const checkUniqueFields = require('./utils/checkUniqueFields');
 const validateSchema = require('./utils/validateSchema');
 const paginateItems = require('./utils/paginateItems');
-const write = require('./io/write');
-const read = require('./io/read');
+const checkIdValid = require('./utils/checkIdValid');
+const handlePopulate = require('./utils/populate');
+
+const { EXCEPTION_MESSAGES, VALUES } = require('./constants');
+const { read, write } = require('./io');
 
 const asyncUnlink = promisify(fs.unlink);
 const asyncExists = promisify(fs.exists);
@@ -33,20 +34,6 @@ const Model = modelInfo => {
     throw new Error(EXCEPTION_MESSAGES.MODEL_MISSED_SCHEMA);
   }
 
-  const _handleCheckValidId = id => {
-    if (!id) {
-      throw new Error(EXCEPTION_MESSAGES.ID_NOT_PROVIDED);
-    }
-
-    if (typeof id !== 'string') {
-      throw new Error(EXCEPTION_MESSAGES.ID_TYPE_STRING);
-    }
-
-    if (id.length !== VALUES.ID_LENGHT) {
-      throw new Error(EXCEPTION_MESSAGES.ID_INVALID_PATTERN);
-    }
-  };
-
   const create = async data => {
     try {
       validateSchema(schema, data);
@@ -63,9 +50,15 @@ const Model = modelInfo => {
     }
   };
 
-  const findAll = async (queryParams = {}) => {
-    const items = await read.all(collection);
+  const findAll = async (queryParams = {}, options = {}) => {
     const queryParamsKeys = Object.keys(queryParams);
+    let items = await read.all(collection);
+
+    if (options.populate) {
+      items = await Promise.all(items.map(async item => {
+        return await handlePopulate(item, schema, options);
+      }));
+    }
 
     if (!queryParamsKeys.length) {
       return items;
@@ -82,14 +75,22 @@ const Model = modelInfo => {
     return filteredItems;
   };
 
-  const findOne = async id => {
-    _handleCheckValidId(id);
+  const findOne = async (id, options = {}) => {
+    checkIdValid(id);
 
-    return read.single(collection, id);
+    const item = await read.single(collection, id);
+
+    if (!options.populate) {
+      return item;
+    }
+
+    const itemWithPopulatedItems = await handlePopulate(item, schema, options);
+
+    return itemWithPopulatedItems;
   };
 
   const findOneAndUpdate = async (id, fields) => {
-    _handleCheckValidId(id);
+    checkIdValid(id);
 
     const dirPath = path.normalize(`${VALUES.DATA_PATH}/${collection}/${id}.json`);
     const isFileExists = await asyncExists(dirPath);
@@ -116,7 +117,7 @@ const Model = modelInfo => {
   };
 
   const findOneAndRemove = async id => {
-    _handleCheckValidId(id);
+    checkIdValid(id);
 
     const dirPath = path.normalize(`${VALUES.DATA_PATH}/${collection}/${id}.json`);
     const isFileExists = await asyncExists(dirPath);

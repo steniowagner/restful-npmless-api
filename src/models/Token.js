@@ -1,12 +1,13 @@
 const { Model, dataTypes } = require('../../server/model');
-const { NUMBER, STRING } = dataTypes;
+const { NUMBER, STRING, ID } = dataTypes;
 
 const TokenSchema = {
   collection: 'tokens',
   schema: {
     userId: {
-      type: STRING,
-      required: true,
+      type: ID,
+      required: false,
+      collection: 'users'
     },
     expires: {
       type: NUMBER,

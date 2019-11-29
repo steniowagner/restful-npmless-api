@@ -17,9 +17,10 @@ const server = http.createServer(async (req, res) => {
     })
   );
 
+  router.get('/users/#id', UserController.readOne);
   router.put('/users/#id', UserController.update);
 
-  router.get('/users', AuthController.authorize, UserController.readAll);
+  router.get('/users', UserController.readAll);
 
   router.post('/signup', UserController.create);
   router.get('/login', AuthController.authenticate);

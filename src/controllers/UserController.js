@@ -43,7 +43,19 @@ exports.update = async (req, res) => {
 exports.readAll = async (req, res) => {
   const queryParams = req.query;
 
-  const users = await User.findAll(queryParams);
+  const users = await User.findAll(queryParams, {
+    populate: 'token',
+  });
 
   res.send().status(200).data({ users });
+};
+
+exports.readOne = async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findOne(id, {
+    populate: 'token',
+  });
+
+  res.send().status(200).data({ user });
 };

@@ -1,5 +1,5 @@
 const { Model, dataTypes } = require('../../server/model');
-const { STRING } = dataTypes;
+const { STRING, ID } = dataTypes;
 
 const UserSchema = {
   collection: 'users',
@@ -11,16 +11,21 @@ const UserSchema = {
     username: {
       type: STRING,
       required: true,
-      unique: true,
     },
     email: {
       type: STRING,
       required: true,
-      unique: true,
     },
     password: {
       type: STRING,
       required: true,
+    },
+    token: {
+      t: [{
+        type: ID,
+        required: true,
+        collection: 'tokens'
+      }]
     },
   }
 };
