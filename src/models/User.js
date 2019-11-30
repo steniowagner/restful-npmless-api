@@ -20,13 +20,6 @@ const UserSchema = {
       type: STRING,
       required: true,
     },
-    token: {
-      t: [{
-        type: ID,
-        required: true,
-        collection: 'tokens'
-      }]
-    },
   }
 };
 

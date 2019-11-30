@@ -4,7 +4,7 @@ const { generateToken } = require('./utils/tokens');
 const Token = require('../models/Token');
 const User = require('../models/User');
 
-const ONE_HOUR = 1000 * 60 * 60;
+const TOKEN_DURATION = 1000 * 60 * 60;
 
 exports.authenticate = async (req, res) => {
   try {
@@ -38,7 +38,7 @@ exports.authenticate = async (req, res) => {
     }
 
     const token = await Token.create({
-      expires: Date.now() + ONE_HOUR,
+      expires: Date.now() + TOKEN_DURATION,
       token: generateToken(),
       userId: user.id,
     });
@@ -54,6 +54,7 @@ exports.authenticate = async (req, res) => {
 exports.authorize = async (req, res, next) => {
   try {
     const { token: userToken } = req.payload;
+    const { id } = req.params;
 
     if (!userToken) {
       return res.send().status(400).data({
@@ -66,6 +67,12 @@ exports.authorize = async (req, res, next) => {
     if (!tokenFromDB) {
       return res.send().status(403).data({
         error: 'Token doesn\'t exists.',
+      });
+    }
+
+    if (id !== tokenFromDB.userId) {
+      return res.send().status(403).data({
+        error: 'This token isn\'t yours.',
       });
     }
 

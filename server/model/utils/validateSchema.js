@@ -30,6 +30,14 @@ const handleEnumType = ({ schema, data, field, path }) => {
   }
 };
 
+const handleCheckValidId = (errorMessage, id) => {
+  try {
+    return checkIdValid(id);
+  } catch (err) {
+    throwValidationError(errorMessage);
+  }
+};
+
 const handleValidateFieldTypeArray = ({ schema, data, field, path }) => {
   if (!Array.isArray(data[field])) {
     throwValidationError(`The field '${path}' must be an array of type '${schema[field].type[0]}'`);
@@ -37,11 +45,7 @@ const handleValidateFieldTypeArray = ({ schema, data, field, path }) => {
 
   const isAllItemsRequiredType = data[field].every(item => {
     if (schema[field].type[0] === ID) {
-      try {
-        return checkIdValid(item);
-      } catch (err) {
-        throwValidationError(`All items of '${path}' must be of type ID`);
-      }
+      handleCheckValidId(`All items of '${path}' must be of type id`, item);
     }
 
     return typeof item === schema[field].type[0];
@@ -60,11 +64,7 @@ const handleValidateRequiredField = ({ schema, data, field, path }) => {
   const isFieldTypeId = schema[field].type === ID;
 
   if (isFieldTypeId) {
-    try {
-      checkIdValid(data[field]);
-    } catch (err) {
-      throwValidationError(`The field '${path}' must be of type ID`);
-    }
+    handleCheckValidId(`The field '${path}' must be of type id`, data[field]);
   }
 
   if (!isFieldTypeId && typeof data[field] !== schema[field].type) {
@@ -73,14 +73,20 @@ const handleValidateRequiredField = ({ schema, data, field, path }) => {
  };
 
  const handleValidateNonRequiredField = ({ schema, data, field, path }) => {
-   if (!data || !schema[field].type) {
+  if (!data || !schema[field].type) {
     return;
   }
 
+  const errorMessage = `The field '${path}' must be of type ${schema[field].type}`;
   const isSameDataType = typeof data[field] === schema[field].type;
+  const isFieldTypeId = schema[field].type === ID;
 
-  if (data.hasOwnProperty(field) && !isSameDataType) {
-    throwValidationError(`The field '${path}' must be of type ${schema[field].type}`);
+  if (isFieldTypeId) {
+    handleCheckValidId(errorMessage, data[field]);
+  }
+
+  if (!isFieldTypeId && data.hasOwnProperty(field) && !isSameDataType) {
+    throwValidationError(errorMessage);
   }
  };
 
@@ -106,7 +112,7 @@ const handleValidationArrayIdType = (ids, path) => {
   try {
     ids.every(id => checkIdValid(id));
   } catch (err) {
-    throwValidationError(`All elements of '${path}' must be of type ID`);
+    throwValidationError(`All elements of '${path}' must be of type id`);
   }
 };
 

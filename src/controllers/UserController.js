@@ -43,9 +43,7 @@ exports.update = async (req, res) => {
 exports.readAll = async (req, res) => {
   const queryParams = req.query;
 
-  const users = await User.findAll(queryParams, {
-    populate: 'token',
-  });
+  const users = await User.findAll(queryParams);
 
   res.send().status(200).data({ users });
 };
@@ -53,9 +51,7 @@ exports.readAll = async (req, res) => {
 exports.readOne = async (req, res) => {
   const { id } = req.params;
 
-  const user = await User.findOne(id, {
-    populate: 'token',
-  });
+  const user = await User.findOne(id);
 
   res.send().status(200).data({ user });
 };
