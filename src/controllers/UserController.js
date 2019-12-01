@@ -10,9 +10,9 @@ exports.create = async (req, res) => {
 
     const id = await User.create(userPayload);
 
-    res.send().status(201).data({ id });
+    return res.send().status(201).data({ id });
   } catch (err) {
-    res.send().status(500).data({
+    return res.send().status(500).data({
       error: err.message,
     });
   }
@@ -25,16 +25,16 @@ exports.update = async (req, res) => {
     const userUpdated = await User.findOneAndUpdate(params.id, payload);
 
     if (!userUpdated) {
-      res.send().status(404).data({
+      return res.send().status(404).data({
         error: 'User not found.',
       });
     }
 
-    res.send().status(404).data({
+    return res.send().status(404).data({
       error: 'User not found.',
     });
   } catch (err) {
-    res.send().status(500).data({
+    return res.send().status(500).data({
       error: err.message,
     });
   }
@@ -45,7 +45,7 @@ exports.readAll = async (req, res) => {
 
   const users = await User.findAll(queryParams);
 
-  res.send().status(200).data({ users });
+  return res.send().status(200).data({ users });
 };
 
 exports.readOne = async (req, res) => {
@@ -53,5 +53,5 @@ exports.readOne = async (req, res) => {
 
   const user = await User.findOne(id);
 
-  res.send().status(200).data({ user });
+  return res.send().status(200).data({ user });
 };

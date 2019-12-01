@@ -2,18 +2,19 @@ const { EXCEPTION_MESSAGES } = require('../constants');
 const getPathValue = require('./getPathValue');
 const read = require('../io/read');
 
-const extractUniquePaths = (schema, path = '', paths) => {
+const extractUniquePaths = (schema, paths, path = '') => {
   for (field in schema) {
     const isFieldTypeArray = Array.isArray(schema[field]);
-    const isComposedObject = !isFieldTypeArray && !schema[field].hasOwnProperty('type');
-    const isSimpleObejct = schema[field].hasOwnProperty('type');
+    const isComposedObject = !isFieldTypeArray && !schema[field].type;
+    const isSimpleObejct = schema[field].type;
+    const isEnum = schema[field].enum;
 
-    if (isFieldTypeArray || isComposedObject) {
+    if (!isEnum && !isFieldTypeArray && isComposedObject) {
       path += `${field}.`
-      extractUniquePaths(schema[field], path, paths);
+      extractUniquePaths(schema[field], paths, path);
     }
 
-    if (isSimpleObejct && schema[field].unique) {
+    if (!isEnum && isSimpleObejct && schema[field].unique) {
       const newPath = path ? `${path}${field}` : field;
       paths.push(newPath);
     }
@@ -28,7 +29,7 @@ const checkUniqueFields = async (Model, object) => {
 
   let pathInvalidValue;
 
-  extractUniquePaths(schema, '', uniqueFieldsPaths);
+  extractUniquePaths(schema, uniqueFieldsPaths);
 
   const isRespectUniqueFields = collectionItems.every(collectionItem => {
     if (collectionItem.id === object.id) {

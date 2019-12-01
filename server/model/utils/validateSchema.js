@@ -8,24 +8,26 @@ const throwValidationError = message => {
   throw new Error(message);
 };
 
-const handleEnumType = ({ schema, data, field, path }) => {
+const handleEnumType = ({ schema: rawSchema, data, field, path }) => {
   if (!data[field]) {
     return;
   }
 
+  const schema = Array.isArray(rawSchema[field]) ? rawSchema[field][0] : rawSchema[field];
+
   if (Array.isArray(data[field])) {
-    const isAllItemsRequiredIncludedArray = data[field].every(item => schema[field].enum.includes(item));
+    const isAllItemsRequiredIncludedArray = data[field].every(item => schema.enum.includes(item));
 
     if (!isAllItemsRequiredIncludedArray) {
-      throwValidationError(`The field '${path}' must include only the following items: [${schema[field].enum}]`);
+      throwValidationError(`The field '${path}' must include only the following items: [${schema.enum}]`);
     }
   }
 
   if (!Array.isArray(data[field])) {
-    const isDataIncludedEnum = schema[field].enum.includes(data[field]);
+    const isDataIncludedEnum = schema.enum.includes(data[field]);
 
     if (!isDataIncludedEnum) {
-      throwValidationError(`The field '${path}' must be one of: [${schema[field].enum}]`);
+      throwValidationError(`The field '${path}' must be one of: [${schema.enum}]`);
     }
   }
 };
@@ -38,27 +40,13 @@ const handleCheckValidId = (errorMessage, id) => {
   }
 };
 
-const handleValidateFieldTypeArray = ({ schema, data, field, path }) => {
-  if (!Array.isArray(data[field])) {
-    throwValidationError(`The field '${path}' must be an array of type '${schema[field].type[0]}'`);
-  }
-
-  const isAllItemsRequiredType = data[field].every(item => {
-    if (schema[field].type[0] === ID) {
-      handleCheckValidId(`All items of '${path}' must be of type id`, item);
-    }
-
-    return typeof item === schema[field].type[0];
-  });
-
-  if (!isAllItemsRequiredType) {
-    throwValidationError(`All items of '${path}' must be of type ${schema[field].type}`);
-  }
-};
-
 const handleValidateRequiredField = ({ schema, data, field, path }) => {
-  if (!data || !data.hasOwnProperty(field)) {
+  if (!data || !data[field]) {
     throwValidationError(`The field '${path}' is required`);
+  }
+
+  if (schema[field].enum) {
+    return handleEnumType({ schema, data, field, path });
   }
 
   const isFieldTypeId = schema[field].type === ID;
@@ -73,6 +61,10 @@ const handleValidateRequiredField = ({ schema, data, field, path }) => {
  };
 
  const handleValidateNonRequiredField = ({ schema, data, field, path }) => {
+  if (schema[field].enum) {
+    return handleEnumType({ schema, data, field, path });
+  }
+
   if (!data || !schema[field].type) {
     return;
   }
@@ -129,19 +121,21 @@ const handleFieldIsArray = ({ schema, data, field, path }) => {
     throwValidationError(`The field '${path}' must be an array`);
   }
 
+  if (schema[field][0].enum) {
+    return handleEnumType({ schema, data, field, path });
+  }
+
   const arrayType = typeof schema[field][0].type;
   const isTypeId = schema[field][0].type === ID;
   const isArrayPrimitiveType = !isTypeId && [STRING, BOOLEAN, NUMBER]
     .some(type => type === arrayType);
 
   if (schema[field][0].type && isArrayPrimitiveType) {
-    handleValidationArrayPrimitiveType(arrayType, data[field], path);
-    return;
+    return handleValidationArrayPrimitiveType(arrayType, data[field], path);
   }
 
   if (schema[field][0].type && isTypeId) {
-    handleValidationArrayIdType(data[field], path);
-    return;
+    return handleValidationArrayIdType(data[field], path);
   }
 
   for (let i = 0; i < data[field].length; i++) {
@@ -154,6 +148,7 @@ const validateSchema = (schema, data) => {
     const params = { schema, data, field };
 
     const isFieldTypeArray = schema[field] && Array.isArray(schema[field]);
+    const isPlainObject = !isFieldTypeArray && !schema[field].enum && !schema[field].type;
 
     if (isFieldTypeArray) {
       pathLog.push(field);
@@ -161,7 +156,7 @@ const validateSchema = (schema, data) => {
       handleFieldIsArray({ ...params, path: pathLog.join('.') });
     }
 
-    if (!isFieldTypeArray && !schema[field].hasOwnProperty('type')) {
+    if (isPlainObject) {
       pathLog.push(field);
 
       handleFieldIsObject({ ...params, path: pathLog.join('.') });
@@ -172,22 +167,12 @@ const validateSchema = (schema, data) => {
 
     const path = [...pathLog, `${field}`].join('.');
 
-    const isFieldHasTypeArray = schema[field] && Array.isArray(schema[field].type);
-
-    if (isFieldHasTypeArray) {
-      handleValidateFieldTypeArray({ schema, data, field, path });
-    }
-
-    if (schema[field] && !isFieldHasTypeArray && schema[field].required) {
+    if (schema[field].required) {
       handleValidateRequiredField({ ...params, path });
     }
 
-    if (schema[field] && !isFieldHasTypeArray && !schema[field].required) {
+    if (!schema[field].required) {
       handleValidateNonRequiredField({ ...params, path });
-    }
-
-    if (schema[field] && schema[field].enum) {
-      handleEnumType({ ...params, path });
     }
   }
 
@@ -197,3 +182,43 @@ const validateSchema = (schema, data) => {
 };
 
 module.exports = validateSchema;
+
+
+    /* const isFieldHasTypeArray = schema[field] && Array.isArray(schema[field].type);
+
+    if (isFieldHasTypeArray) {
+      handleValidateFieldTypeArray({ schema, data, field, path });
+    }
+
+    const isFieldValidObject = schema[field] && !isFieldHasTypeArray;
+
+    if (isFieldValidObject && schema[field].required) {
+      handleValidateRequiredField({ ...params, path });
+    }
+
+    if (isFieldValidObject && !schema[field].required) {
+      handleValidateNonRequiredField({ ...params, path });
+    }
+
+    if (schema[field] && isEnum) {
+      handleEnumType({ ...params, path });
+    }
+
+const handleValidateFieldTypeArray = ({ schema, data, field, path }) => {
+  if (!Array.isArray(data[field])) {
+    throwValidationError(`The field '${path}' must be an array of type '${schema[field].type[0]}'`);
+  }
+
+  const isAllItemsRequiredType = data[field].every(item => {
+    if (schema[field].type[0] === ID) {
+      handleCheckValidId(`All items of '${path}' must be of type id`, item);
+    }
+
+    return typeof item === schema[field].type[0];
+  });
+
+  if (!isAllItemsRequiredType) {
+    throwValidationError(`All items of '${path}' must be of type ${schema[field].type}`);
+  }
+};
+    */

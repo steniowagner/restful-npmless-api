@@ -21,6 +21,10 @@ const filterItems = (filters, items) => {
     return filters.every(([field, value]) => {
       let convertedValue;
 
+      if (Array.isArray(value)) {
+        // return value.includes(item[field]);
+      }
+
       if (typeof item[field] === 'string') {
         convertedValue = parseWhiteSpaces(String(value));
       }

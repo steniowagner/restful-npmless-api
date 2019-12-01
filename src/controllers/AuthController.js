@@ -4,7 +4,7 @@ const { generateToken } = require('./utils/tokens');
 const Token = require('../models/Token');
 const User = require('../models/User');
 
-const TOKEN_DURATION = 1000 * 60 * 60;
+const TOKEN_DURATION = 1000 * 60 * 60; // one hour
 
 exports.authenticate = async (req, res) => {
   try {
