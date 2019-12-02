@@ -6,7 +6,7 @@ const TokenSchema = {
   schema: {
     userId: {
       type: ID,
-      required: false,
+      required: true,
       collection: 'users'
     },
     expires: {

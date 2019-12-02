@@ -1,5 +1,5 @@
-const encryptStringWithSHA256 = require('./utils/encryptStringWithSHA256');
-const { generateToken } = require('./utils/tokens');
+const encryptStringWithSHA256 = require('../utils/encryptStringWithSHA256');
+const { generateToken } = require('../utils/tokens');
 
 const Token = require('../models/Token');
 const User = require('../models/User');
@@ -29,7 +29,7 @@ exports.authenticate = async (req, res) => {
       username,
     });
 
-    const isPasswordCorrect = encryptStringWithSHA256(password) === user.password;
+    const isPasswordCorrect = encryptStringWithSHA256(password) === user.passwordHash;
 
     if (!isPasswordCorrect) {
       return res.send().status(401).data({
@@ -53,8 +53,7 @@ exports.authenticate = async (req, res) => {
 
 exports.authorize = async (req, res, next) => {
   try {
-    const { token: userToken } = req.payload;
-    const { id } = req.params;
+    const { token: userToken, user_id } = req.headers;
 
     if (!userToken) {
       return res.send().status(400).data({
@@ -70,7 +69,7 @@ exports.authorize = async (req, res, next) => {
       });
     }
 
-    if (id !== tokenFromDB.userId) {
+    if (user_id !== tokenFromDB.userId) {
       return res.send().status(403).data({
         error: 'This token isn\'t yours.',
       });

@@ -1,4 +1,4 @@
-const config = require('../../config/environments');
+const config = require('../config/environments');
 const crypto = require('crypto');
 
 const encryptStringWithSHA256 = value => {

@@ -2,10 +2,12 @@ const http = require('http');
 
 const AuthorController = require('./controllers/AuthorController');
 const UserController = require('./controllers/UserController');
-const AuthController = require('./controllers/AuthController');
 const BookController = require('./controllers/BookController');
 
-const env = require('./config/environments');
+const { authenticate, authorize } = require('./middlewares/auth');
+const checkIsAdmin = require('./middlewares/checkIsAdmin');
+
+const { port } = require('./config/environments');
 const Router = require('../server/router');
 
 const server = http.createServer(async (req, res) => {
@@ -19,22 +21,18 @@ const server = http.createServer(async (req, res) => {
     })
   );
 
-  router.post('/authors', AuthorController.create);
+  router.post('/authors', authorize, checkIsAdmin, AuthorController.create);
+  router.get('/authors', authorize, AuthorController.readAll);
+  router.get('/authors/#id', authorize, AuthorController.readOne);
+  router.put('/authors/#id', authorize, checkIsAdmin, AuthorController.update);
+  router.delete('/authors/#id', authorize, checkIsAdmin, AuthorController.delete);
 
-  router.get('/users/#id', AuthController.authorize, UserController.readOne);
-  router.put('/users/#id', UserController.update);
-
-  router.get('/users', UserController.readAll);
   router.post('/users', UserController.create);
 
-  router.get('/books', BookController.readAll);
-  router.post('/books', BookController.create);
-
+  router.get('/login', authenticate);
   router.post('/signup', UserController.create);
-  router.get('/login', AuthController.authenticate);
-
 
   await router.process();
 });
 
-server.listen(env.port, () => console.log(`>> Server is running at localhost:${env.port}!`));
+server.listen(port, () => console.log(`>> Server is running at localhost:${port}!`));

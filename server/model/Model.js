@@ -80,6 +80,10 @@ const Model = modelInfo => {
 
     const item = await read.single(collection, id);
 
+    if (!item) {
+      return null;
+    }
+
     if (!options.populate) {
       return item;
     }

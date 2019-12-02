@@ -1,12 +1,15 @@
-const encryptStringWithSHA256 = require('./utils/encryptStringWithSHA256');
+const encryptStringWithSHA256 = require('../utils/encryptStringWithSHA256');
 const User = require('../models/User');
 
 exports.create = async (req, res) => {
   try {
     const userPayload = {
       ...req.payload,
-      password: encryptStringWithSHA256(req.payload.password),
+      passwordHash: encryptStringWithSHA256(req.payload.password),
+      history: [],
     };
+
+    delete userPayload.password;
 
     const id = await User.create(userPayload);
 

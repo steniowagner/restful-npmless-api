@@ -11,7 +11,7 @@ const handlePopulateField = async ({ itemsToPopulate, collection, populatePath, 
 const populate = async (item, schema, options) => {
   const { populate: populatePath } = options;
 
-  const itemsToPopulate = JSON.parse(getPathValue(populatePath, item));
+  const itemsToPopulate = getPathValue(populatePath, item);
   const populateSchemaPath = getPathValue(populatePath, schema);
 
   if (!Array.isArray(populateSchemaPath)) {

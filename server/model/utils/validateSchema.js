@@ -19,7 +19,7 @@ const handleEnumType = ({ schema: rawSchema, data, field, path }) => {
     const isAllItemsRequiredIncludedArray = data[field].every(item => schema.enum.includes(item));
 
     if (!isAllItemsRequiredIncludedArray) {
-      throwValidationError(`The field '${path}' must include only the following items: [${schema.enum}]`);
+      throwValidationError(`The field '${path}' must only include the following items: [${schema.enum}]`);
     }
   }
 
