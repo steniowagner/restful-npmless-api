@@ -4,7 +4,8 @@ const AuthorController = require('./controllers/AuthorController');
 const UserController = require('./controllers/UserController');
 const BookController = require('./controllers/BookController');
 
-const { authenticate, authorize } = require('./middlewares/auth');
+const { authenticate, authorize, removeToken } = require('./middlewares/auth');
+const checkIsAdminOrSelf = require('./middlewares/checkIsAdminOrSelf');
 const checkIsAdmin = require('./middlewares/checkIsAdmin');
 
 const { port } = require('./config/environments');
@@ -21,16 +22,22 @@ const server = http.createServer(async (req, res) => {
     })
   );
 
+  // Author routes
   router.post('/authors', authorize, checkIsAdmin, AuthorController.create);
   router.get('/authors', authorize, AuthorController.readAll);
   router.get('/authors/#id', authorize, AuthorController.readOne);
   router.put('/authors/#id', authorize, checkIsAdmin, AuthorController.update);
   router.delete('/authors/#id', authorize, checkIsAdmin, AuthorController.delete);
 
-  router.post('/users', UserController.create);
+  // User routes
+  router.post('/signup', UserController.create);
+  router.get('/users', authorize, checkIsAdmin, UserController.readAll);
+  router.get('/users/#id', authorize, checkIsAdminOrSelf, UserController.readOne);
+  router.put('/users/#id', authorize, checkIsAdminOrSelf, UserController.update);
+  router.delete('/users/#id', authorize, checkIsAdminOrSelf, removeToken, UserController.delete);
 
   router.get('/login', authenticate);
-  router.post('/signup', UserController.create);
+  // router.get('/logout', authenticate); remove token
 
   await router.process();
 });

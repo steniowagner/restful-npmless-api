@@ -21,21 +21,13 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+exports.readAll = async (req, res) => {
   try {
-    const { payload, params } = req;
+    const queryParams = req.query;
 
-    const userUpdated = await User.findOneAndUpdate(params.id, payload);
+    const users = await User.findAll(queryParams);
 
-    if (!userUpdated) {
-      return res.send().status(404).data({
-        error: 'User not found.',
-      });
-    }
-
-    return res.send().status(404).data({
-      error: 'User not found.',
-    });
+    return res.send().status(200).data({ users });
   } catch (err) {
     return res.send().status(500).data({
       error: err.message,
@@ -43,18 +35,62 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.readAll = async (req, res) => {
-  const queryParams = req.query;
+exports.readOne = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-  const users = await User.findAll(queryParams);
+    const user = await User.findOne(id);
 
-  return res.send().status(200).data({ users });
+    if (!user) {
+      return res.send().status(404).data({
+        error: 'User not found.',
+      });
+    }
+
+    return res.send().status(200).data({ user });
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
 };
 
-exports.readOne = async (req, res) => {
-  const { id } = req.params;
+exports.update = async (req, res) => {
+  try {
+    const { payload, params } = req;
 
-  const user = await User.findOne(id);
+    const user = await User.findOneAndUpdate(params.id, payload);
 
-  return res.send().status(200).data({ user });
+    if (!user) {
+      return res.send().status(404).data({
+        error: 'User not found.',
+      });
+    }
+
+    return res.send().status(200).data({ user });
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
+};
+
+exports.delete = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findOneAndRemove(id);
+
+    if (!user) {
+      return res.send().status(404).data({
+        error: 'User not found.',
+      });
+    }
+
+    return res.send().status(200).data({ user });
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
 };

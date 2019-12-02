@@ -61,6 +61,12 @@ exports.authorize = async (req, res, next) => {
       });
     }
 
+    if (!user_id) {
+      return res.send().status(400).data({
+        error: 'You must specify your id.',
+      });
+    }
+
     const tokenFromDB = await Token.findOne(userToken);
 
     if (!tokenFromDB) {
@@ -81,12 +87,32 @@ exports.authorize = async (req, res, next) => {
       });
     }
 
-    const user = await User.findOne(tokenFromDB.userId);
+    const user = await User.findOne(user_id);
+
+    if (!user) {
+      return res.send().status(404).data({
+        error: 'User not found.',
+      });
+    }
 
     req.locals = {
       ...req.locals,
       user,
     };
+
+    next();
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
+};
+
+exports.removeToken = async (req, res, next) => {
+  try {
+    const { token } = req.headers;
+
+    await Token.findOneAndRemove(token);
 
     next();
   } catch (err) {
