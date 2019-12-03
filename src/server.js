@@ -1,5 +1,6 @@
 const http = require('http');
 
+const LibraryController = require('./controllers/LibraryController');
 const AuthorController = require('./controllers/AuthorController');
 const UserController = require('./controllers/UserController');
 const BookController = require('./controllers/BookController');
@@ -35,6 +36,25 @@ const server = http.createServer(async (req, res) => {
   router.get('/users/#id', authorize, checkIsAdminOrSelf, UserController.readOne);
   router.put('/users/#id', authorize, checkIsAdminOrSelf, UserController.update);
   router.delete('/users/#id', authorize, checkIsAdminOrSelf, removeToken, UserController.delete);
+
+  // Book routes
+  router.post('/books',
+    authorize,
+    checkIsAdmin,
+    BookController.create,
+    AuthorController.addAuthorBook,
+    LibraryController.addNewBook,
+  );
+  router.get('/books', authorize, BookController.readAll);
+  router.get('/books/#id', authorize, BookController.readOne);
+  router.put('/books/#id', authorize, checkIsAdmin, BookController.update);
+  router.delete('/books/#id',
+    authorize,
+    checkIsAdmin,
+    BookController.delete,
+    AuthorController.removeAuthorBook,
+    LibraryController.removeBook,
+  );
 
   router.get('/login', authenticate);
   // router.get('/logout', authenticate); remove token

@@ -1,4 +1,5 @@
 const Author = require('../models/Author');
+const Book = require('../models/Book');
 
 exports.create = async (req, res) => {
   try {
@@ -92,3 +93,55 @@ exports.delete = async (req, res) => {
     });
   }
 }
+
+exports.addAuthorBook = async (req, res, next) => {
+  try {
+    const { author: authorId } = req.payload;
+    const { bookId } = req.locals;
+
+    const author = await Author.findOne(authorId);
+
+    if (!author) {
+      await Book.findOneAndRemove(bookId);
+
+      return res.send().status(404).data({
+        error: 'Author not found.',
+      });
+    }
+
+    await Author.findOneAndUpdate(authorId, {
+      books: [...author.books, bookId],
+    });
+
+    next();
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
+};
+
+exports.removeAuthorBook = async (req, res, next) => {
+  try {
+    const { authorId } = req.locals;
+    const { id } = req.params;
+
+    const author = await Author.findOne(authorId);
+
+    if (!author) {
+      return res.send().status(404).data({
+        error: 'Author not found',
+      });
+    }
+
+    await Author.findOneAndUpdate(authorId, {
+      books: author.books.filter(book => book !== id),
+    });
+
+    next();
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
+};
