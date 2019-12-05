@@ -34,7 +34,7 @@ const UserSchema = {
         required: true,
         collection: 'books'
       },
-      loanDate: {
+      borrowDate: {
         type: STRING,
         required: true,
       },

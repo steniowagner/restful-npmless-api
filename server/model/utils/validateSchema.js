@@ -41,7 +41,7 @@ const handleCheckValidId = (errorMessage, id) => {
 };
 
 const handleValidateRequiredField = ({ schema, data, field, path }) => {
-  if (!data || !data[field]) {
+  if (!data || typeof data[field] === 'undefined') {
     throwValidationError(`The field '${path}' is required`);
   }
 
@@ -138,6 +138,10 @@ const handleFieldIsArray = ({ schema, data, field, path }) => {
     return handleValidationArrayIdType(data[field], path);
   }
 
+  if (!data[field].length) {
+    pathLog = []
+  }
+
   for (let i = 0; i < data[field].length; i++) {
     validateSchema(schema[field][0], data[field][i]);
   }
@@ -167,11 +171,11 @@ const validateSchema = (schema, data) => {
 
     const path = [...pathLog, `${field}`].join('.');
 
-    if (schema[field].required) {
+    if (schema[field] && schema[field].required) {
       handleValidateRequiredField({ ...params, path });
     }
 
-    if (!schema[field].required) {
+    if (schema[field] && !schema[field].required) {
       handleValidateNonRequiredField({ ...params, path });
     }
   }
@@ -182,43 +186,3 @@ const validateSchema = (schema, data) => {
 };
 
 module.exports = validateSchema;
-
-
-    /* const isFieldHasTypeArray = schema[field] && Array.isArray(schema[field].type);
-
-    if (isFieldHasTypeArray) {
-      handleValidateFieldTypeArray({ schema, data, field, path });
-    }
-
-    const isFieldValidObject = schema[field] && !isFieldHasTypeArray;
-
-    if (isFieldValidObject && schema[field].required) {
-      handleValidateRequiredField({ ...params, path });
-    }
-
-    if (isFieldValidObject && !schema[field].required) {
-      handleValidateNonRequiredField({ ...params, path });
-    }
-
-    if (schema[field] && isEnum) {
-      handleEnumType({ ...params, path });
-    }
-
-const handleValidateFieldTypeArray = ({ schema, data, field, path }) => {
-  if (!Array.isArray(data[field])) {
-    throwValidationError(`The field '${path}' must be an array of type '${schema[field].type[0]}'`);
-  }
-
-  const isAllItemsRequiredType = data[field].every(item => {
-    if (schema[field].type[0] === ID) {
-      handleCheckValidId(`All items of '${path}' must be of type id`, item);
-    }
-
-    return typeof item === schema[field].type[0];
-  });
-
-  if (!isAllItemsRequiredType) {
-    throwValidationError(`All items of '${path}' must be of type ${schema[field].type}`);
-  }
-};
-    */

@@ -29,6 +29,12 @@ exports.authenticate = async (req, res) => {
       username,
     });
 
+    if (!user) {
+      return res.send().status(400).data({
+        error: 'User not found.',
+      });
+    }
+
     const isPasswordCorrect = encryptStringWithSHA256(password) === user.passwordHash;
 
     if (!isPasswordCorrect) {

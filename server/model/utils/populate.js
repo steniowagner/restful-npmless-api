@@ -12,7 +12,9 @@ const populate = async (item, schema, options) => {
   const { populate: populatePath } = options;
 
   const itemsToPopulate = getPathValue(populatePath, item);
+  console.log('itemsToPopulate: ',itemsToPopulate )
   const populateSchemaPath = getPathValue(populatePath, schema);
+  console.log('populateSchemaPath: ',populateSchemaPath )
 
   if (!Array.isArray(populateSchemaPath)) {
     return handlePopulateField({

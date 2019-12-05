@@ -4,7 +4,12 @@ exports.create = async (req, res, next) => {
   try {
     const { payload } = req;
 
-    const bookId = await Book.create(payload);
+    const bookId = await Book.create({
+      author: payload.author,
+      genre: payload.genre,
+      title: payload.title,
+      isbn: payload.isbn,
+    });
 
     req.locals = {
       ...req.locals,

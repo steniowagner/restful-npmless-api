@@ -25,7 +25,9 @@ exports.readAll = async (req, res) => {
   try {
     const queryParams = req.query;
 
-    const users = await User.findAll(queryParams);
+    const users = await User.findAll(queryParams, {
+      populate: 'history',
+    });
 
     return res.send().status(200).data({ users });
   } catch (err) {
@@ -39,7 +41,9 @@ exports.readOne = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const user = await User.findOne(id);
+    const user = await User.findOne(id, {
+      populate: 'history',
+    });
 
     if (!user) {
       return res.send().status(404).data({
