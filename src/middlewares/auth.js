@@ -114,13 +114,31 @@ exports.authorize = async (req, res, next) => {
   }
 };
 
+const handleRemoveToken = async req => {
+  const { token } = req.headers;
+
+  await Token.findOneAndRemove(token);
+};
+
 exports.removeToken = async (req, res, next) => {
   try {
-    const { token } = req.headers;
-
-    await Token.findOneAndRemove(token);
+    await handleRemoveToken(req);
 
     next();
+  } catch (err) {
+    return res.send().status(500).data({
+      error: err.message,
+    });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    await handleRemoveToken(req);
+
+    return res.send().status(200).data({
+      message: 'Logged-out.',
+    });
   } catch (err) {
     return res.send().status(500).data({
       error: err.message,

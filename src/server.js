@@ -6,9 +6,15 @@ const UserController = require('./controllers/UserController');
 const BookController = require('./controllers/BookController');
 
 
-const { authenticate, authorize, removeToken } = require('./middlewares/auth');
 const checkIsAdminOrSelf = require('./middlewares/checkIsAdminOrSelf');
 const checkIsAdmin = require('./middlewares/checkIsAdmin');
+
+const {
+  authenticate,
+  removeToken,
+  authorize,
+  logout,
+} = require('./middlewares/auth');
 
 const { port } = require('./config/environments');
 const Router = require('../server/router');
@@ -60,11 +66,10 @@ const server = http.createServer(async (req, res) => {
   // Library routes
   router.post('/library/borrow-book', authorize, LibraryController.borrowBook);
   router.post('/library/deliver-book', authorize, LibraryController.deliverBook);
-
   router.get('/library', authorize, checkIsAdmin, LibraryController.read);
 
-  router.get('/login', authenticate);
-  // router.get('/logout', authenticate); remove token
+  router.post('/login', authenticate);
+  router.post('/logout', logout);
 
   await router.process();
 });
