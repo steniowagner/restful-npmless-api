@@ -25,9 +25,7 @@ exports.readAll = async (req, res) => {
   try {
     const queryParams = req.query;
 
-    const users = await User.findAll(queryParams, {
-      populate: 'history',
-    });
+    const users = await User.findAll(queryParams);
 
     return res.send().status(200).data({ users });
   } catch (err) {

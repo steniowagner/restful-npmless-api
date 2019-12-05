@@ -9,7 +9,7 @@ const checkIsAdminOrSelf = (req, res, next) => {
     const isSelf = id === user.id;
 
     if (!isAdmin && !isSelf) {
-      return res.send().status(401).data({
+      return res.send().status(403).data({
         error: 'You cant\'t perform this action.',
       });
     }

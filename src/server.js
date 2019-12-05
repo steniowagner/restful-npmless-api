@@ -59,6 +59,9 @@ const server = http.createServer(async (req, res) => {
 
   // Library routes
   router.post('/library/borrow-book', authorize, LibraryController.borrowBook);
+  router.post('/library/deliver-book', authorize, LibraryController.deliverBook);
+
+  router.get('/library', authorize, checkIsAdmin, LibraryController.read);
 
   router.get('/login', authenticate);
   // router.get('/logout', authenticate); remove token

@@ -56,7 +56,7 @@ const Model = modelInfo => {
 
     if (options.populate) {
       items = await Promise.all(items.map(async item => {
-        return await handlePopulate(item, schema, options);
+        return await handlePopulate(item, schema, options.populate);
       }));
     }
 
@@ -88,7 +88,7 @@ const Model = modelInfo => {
       return item;
     }
 
-    const itemWithPopulatedItems = await handlePopulate(item, schema, options);
+    const itemWithPopulatedItems = await handlePopulate(item, schema, options.populate);
 
     return itemWithPopulatedItems;
   };

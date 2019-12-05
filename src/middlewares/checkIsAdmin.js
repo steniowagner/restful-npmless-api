@@ -5,7 +5,7 @@ const checkIsAdmin = (req, res, next) => {
     const { user } = req.locals;
 
     if (user.role !== VALUES.ADMIN_ROLE) {
-      return res.send().status(401).data({
+      return res.send().status(403).data({
         error: 'You don\'t have privileges to perform this action.',
       });
     }

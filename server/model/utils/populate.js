@@ -8,13 +8,9 @@ const handlePopulateField = async ({ itemsToPopulate, collection, populatePath, 
   return setPathValue(populatePath, item, valueToPopulate);
 };
 
-const populate = async (item, schema, options) => {
-  const { populate: populatePath } = options;
-
-  const itemsToPopulate = getPathValue(populatePath, item);
-  console.log('itemsToPopulate: ',itemsToPopulate )
+const populate = async (item, schema, populatePath) => {
   const populateSchemaPath = getPathValue(populatePath, schema);
-  console.log('populateSchemaPath: ',populateSchemaPath )
+  const itemsToPopulate = getPathValue(populatePath, item);
 
   if (!Array.isArray(populateSchemaPath)) {
     return handlePopulateField({
@@ -26,6 +22,10 @@ const populate = async (item, schema, options) => {
   }
 
   const { collection } = populateSchemaPath[0];
+
+  if (!collection) {
+    return item;
+  }
 
   const itemsPopulated = await Promise.all(itemsToPopulate.map(async itemToPopulate => {
     return await read.single(collection, itemToPopulate.toString());

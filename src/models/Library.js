@@ -51,26 +51,6 @@ const LibrarySchema = {
         required: true,
       }
     }],
-    records: [{
-      book: {
-        type: ID,
-        required: true,
-        collection: 'books',
-      },
-      user: {
-        type: ID,
-        required: true,
-        collection: 'users',
-      },
-      borrowDate: {
-        type: STRING,
-        required: true,
-      },
-      deliveryDate: {
-        type: STRING,
-        required: true,
-      }
-    }],
   },
 };
 
