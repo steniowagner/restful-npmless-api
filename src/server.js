@@ -5,7 +5,6 @@ const AuthorController = require('./controllers/AuthorController');
 const UserController = require('./controllers/UserController');
 const BookController = require('./controllers/BookController');
 
-
 const checkIsAdminOrSelf = require('./middlewares/checkIsAdminOrSelf');
 const checkIsAdmin = require('./middlewares/checkIsAdmin');
 
