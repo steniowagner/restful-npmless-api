@@ -136,15 +136,6 @@ $ cd restful-npmless-api
 **Running**
 
 ```
-> On MacOS or Linux based OS:
-
-$ NODE_ENV=development node index.js
-```
-
-```
-> On Windows:
-
-$ $env:NODE_ENV="development"
 $ node index.js
 ```
 
