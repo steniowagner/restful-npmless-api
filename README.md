@@ -7,7 +7,7 @@ The idea of the Project is:
 
 ## Why?
 
-I was using express for routing and mongoose/sequelize to connect my server with my database for a while, and just wanted to try to build my own router and my own database-connector and use them to build a RESTful API using just native modules. 🤷🏾‍♂️ 
+I've been using express for routing and mongoose/sequelize to connect my server with my database for a while, and just wanted to try to build my own router and my own database-connector and use them to build a RESTful API using just native modules. 🤷🏾‍♂️ 
 
 Also, this project is part of my personal portfolio, so, I'll be happy if you could provide me any feedback about the project, code, structure or anything that you can report that could make me a better developer!
 
@@ -134,6 +134,8 @@ $ cd restful-npmless-api
 ```
 
 **Running**
+
+> Note: This project wasn't tested on Windows, so, maybe you find some bugs if you're trying to run it on Windows OS.
 
 ```
 $ node index.js
