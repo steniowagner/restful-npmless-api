@@ -31,7 +31,9 @@ It's free!
 
 5 - The database will be just .JSON files.
 
-6 - I know that we don't use to have much time to develop our own solutions for some problems, and we end up by using an existent solution using some lib (obviously, you don't need to re-invent the wheel everyday), but, I really want to encourage you to, whenever possible, try to build your own solutions, I'm sure that it will make you a more independent developer. Also, this experience will expand your knowledge and you'll feel so amazing after to build it (like I'm feeling now)!
+6 - And I'll answer you: And I answer you: I know we don't always have time to implement our own ideas to solve certain problems that we face in our daily lives as engineers who use programming to create solutions, but I really want to encourage you, whenever possible, to try to build your own solutions and codify your ideas for these problems, this will make you a much more independent developer and of course much more confident in using a programming language. Apart from the fact that of course this experience will make you expand your knowledge and make you feel amazing while implementing each feature (as I'm feeling now)!
+
+PS: Treat this project as a personal challenge that I set myself, so there is no intention of running this API in production. Therefore, this project is not a perfect solution and certainly not better than the ones that already exist in the market, but I want to share this knowledge I learned and implemented with the community so that everyone can benefit from what I did!
 
 ## What's inside
 
